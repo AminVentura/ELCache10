@@ -1,4 +1,8 @@
 /* El Caché 10 Barbershop - Optimized */
+
+/** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / “Copy link”). */
+const BOOKSY_BOOKING_URL = '';
+
 let lightboxTrigger = null;
 
 function buildCalendarLink(name, phone, service, haircut, date, time, notes, durationMin) {
@@ -20,11 +24,53 @@ function buildCalendarLink(name, phone, service, haircut, date, time, notes, dur
 
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
+  initLangSwitcher();
+  initBooksyBooking();
   initBooking();
   initHeader();
   initYear();
   initLightbox();
 });
+
+/** URL sent to Google Translate (canonical when https, else live page, else production root). */
+function pageUrlForTranslate() {
+  const c = document.querySelector('link[rel="canonical"]');
+  if (c?.href && /^https?:\/\//i.test(c.href)) return c.href;
+  if (/^https?:/i.test(window.location.protocol)) return window.location.href.split('#')[0];
+  return 'https://elcache10.com/';
+}
+
+function initLangSwitcher() {
+  const u = encodeURIComponent(pageUrlForTranslate());
+  document.querySelectorAll('[data-google-translate]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tl = btn.getAttribute('data-google-translate');
+      window.location.href = `https://translate.google.com/translate?sl=auto&tl=${tl}&u=${u}`;
+    });
+  });
+}
+
+function initBooksyBooking() {
+  const url = typeof BOOKSY_BOOKING_URL === 'string' ? BOOKSY_BOOKING_URL.trim() : '';
+  const hasBooksy = /^https?:\/\//i.test(url);
+  document.querySelectorAll('[data-booksy-book-btn]').forEach((btn) => {
+    if (hasBooksy) {
+      btn.href = url;
+      btn.setAttribute('aria-label', 'Book on Booksy — open live schedule');
+      const label = btn.querySelector('.booksy-btn-text');
+      if (label) label.textContent = 'Book on Booksy';
+    } else {
+      btn.href =
+        'https://wa.me/16463349409?text=' +
+        encodeURIComponent(
+          'Hi! Please send me the El Caché 10 Booksy booking link so I can reserve a time online.'
+        );
+      btn.setAttribute('aria-label', 'Request Booksy booking link on WhatsApp');
+      const label = btn.querySelector('.booksy-btn-text');
+      if (label) label.textContent = 'Get Booksy link on WhatsApp';
+    }
+  });
+}
 
 function initNav() {
   const toggle = document.querySelector('.nav-toggle');
