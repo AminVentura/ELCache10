@@ -12,8 +12,10 @@ function buildCalendarLink(name, phone, service, haircut, date, time, notes, dur
   let details = `Cliente: ${name}\nTel: ${phone}\nServicio: ${service}`;
   if (haircut && service.includes('Barber')) details += `\nCorte: ${haircut}`;
   if (notes) details += `\nNotas: ${notes}`;
+  details += `\n\nEl Caché 10 Barbershop\n1942 Harrison Ave, Bronx, NY 10453\nTel: (646) 334-9409`;
   const dates = `${fmt(start)}/${fmt(end)}`;
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${encodeURIComponent(details)}`;
+  const location = encodeURIComponent('1942 Harrison Ave, Bronx, NY 10453');
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${encodeURIComponent(details)}&location=${location}&ctz=America/New_York`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -67,6 +69,7 @@ function initHeader() {
 function initBooking() {
   const form = document.getElementById('booking-form');
   const btn = document.getElementById('booking-whatsapp-btn');
+  const calBtn = document.getElementById('booking-calendar-btn');
   const serviceSelect = document.getElementById('booking-service');
   const haircutWrap = document.getElementById('haircut-type-wrap');
   const staffWrap = document.getElementById('staff-preference-wrap');
@@ -126,6 +129,7 @@ function initBooking() {
     const staffContact = document.getElementById('booking-staff-contact')?.value?.trim();
     const date = document.getElementById('booking-date')?.value;
     const time = document.getElementById('booking-time')?.value;
+    const timeAlt = document.getElementById('booking-time-alt')?.value?.trim();
     const notes = document.getElementById('booking-notes')?.value?.trim();
 
     if (!name || !phone || !service || !date || !time) {
@@ -138,11 +142,13 @@ function initBooking() {
     msg += `Phone: ${phone}\n`;
     msg += `Service: ${service}\n`;
     if (haircut && service.includes('Barber')) msg += `Haircut/Style: ${haircut}\n`;
-    if (staff) msg += `Preferred: ${staff}\n`;
+    if (staff) msg += `Preferred barber/staff: ${staff}\n`;
     if (staffContact) msg += `Staff (name/WhatsApp): ${staffContact}\n`;
     msg += `Date: ${date}\n`;
     msg += `Preferred Time: ${time}\n`;
+    if (timeAlt) msg += `Alternative time if ${time} is taken: ${timeAlt}\n`;
     if (notes) msg += `Notes: ${notes}\n\n`;
+    msg += `_If this slot is not available with the requested barber, please suggest the nearest available time. Thanks!_`;
 
     const durationMin = service.includes('Manicure') && !service.includes('Barber') && !service.includes('Pedicure') ? 45 : 60;
     const calendarLink = buildCalendarLink(name, phone, service, haircut, date, time, notes, durationMin);
