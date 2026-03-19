@@ -23,6 +23,7 @@ function buildCalendarLink(name, phone, service, haircut, date, time, notes, dur
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initEmbeddedFrame();
   initNav();
   initLangSwitcher();
   initBooksyBooking();
@@ -31,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initYear();
   initLightbox();
 });
+
+/** When the site opens inside Google Translate (iframe), offset fixed header so it sits below their toolbar. */
+function initEmbeddedFrame() {
+  try {
+    if (window.self !== window.top) {
+      document.documentElement.classList.add('is-embedded-frame');
+    }
+  } catch (e) {
+    /* cross-origin edge cases */
+  }
+}
 
 /** URL sent to Google Translate (canonical when https, else live page, else production root). */
 function pageUrlForTranslate() {

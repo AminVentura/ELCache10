@@ -35,6 +35,13 @@
   --space: 1rem;
   --space-lg: 2rem;
   --header-height: 72px;
+  /* Google Translate (and similar) iframe chrome — pushes fixed header down */
+  --embed-frame-offset: 0px;
+  --fixed-header-stack: calc(var(--embed-frame-offset) + var(--header-height));
+}
+
+html.is-embedded-frame {
+  --embed-frame-offset: 52px;
 }
 
 /* Reset & Base */
@@ -67,6 +74,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--fixed-header-stack);
 }
 
 body {
@@ -155,7 +163,7 @@ ul {
 /* Header & Navigation */
 .header {
   position: fixed;
-  top: 0;
+  top: var(--embed-frame-offset);
   left: 0;
   right: 0;
   z-index: 1000;
@@ -297,7 +305,7 @@ ul {
 
 .nav-links {
   position: fixed;
-  top: var(--header-height);
+  top: var(--fixed-header-stack);
   left: 0;
   right: 0;
   background: var(--color-navy);
@@ -310,6 +318,10 @@ ul {
 
 .nav-links.is-open {
   display: flex;
+  max-height: calc(100vh - var(--fixed-header-stack));
+  max-height: calc(100dvh - var(--fixed-header-stack));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-links a {
@@ -342,7 +354,7 @@ ul {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding: calc(var(--header-height) + 2rem) 1.5rem 2rem;
+  padding: calc(var(--fixed-header-stack) + 2rem) 1.5rem 2rem;
   overflow: hidden;
 }
 
@@ -1813,7 +1825,7 @@ ul {
 
 /* Legal pages */
 .legal-page {
-  padding-top: calc(var(--header-height) + 3rem);
+  padding-top: calc(var(--fixed-header-stack) + 3rem);
 }
 
 .legal-page h1 {
