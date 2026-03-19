@@ -1888,6 +1888,28 @@ ul {
   height: 1rem;
 }
 
+.instagram-feed-note {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  max-width: 42rem;
+  margin: 0 auto 1.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  line-height: 1.55;
+}
+
+.instagram-feed-note a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.instagram-feed-note a:hover {
+  color: var(--color-navy);
+}
+
 @media (max-width: 480px) {
   .booking-row {
     grid-template-columns: 1fr;

@@ -161,14 +161,14 @@ function initBooking() {
   function updateStaffOptions() {
     const val = serviceSelect?.value || '';
     let opts = staffOptions.combo;
-    if (val === 'Barber') opts = staffOptions.barber;
-    else if (val === 'Manicure' || val === 'Pedicure') opts = staffOptions.nails;
+    if (val === 'Barber' || val === 'Blow dry / Secado de pelo') opts = staffOptions.barber;
+    else if (val === 'Manicure' || val === 'Pedicure' || val === 'Acrylic nails') opts = staffOptions.nails;
     staffSelect.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
   }
 
   function toggleHaircutField() {
     const val = serviceSelect?.value || '';
-    haircutWrap.style.display = val.includes('Barber') ? 'block' : 'none';
+    haircutWrap.style.display = val.includes('Barber') || val === 'Blow dry / Secado de pelo' ? 'block' : 'none';
   }
 
   serviceSelect?.addEventListener('change', () => {
@@ -208,7 +208,8 @@ function initBooking() {
     if (notes) msg += `Notes: ${notes}\n\n`;
     msg += `_If this slot is not available with the requested barber, please suggest the nearest available time. Thanks!_`;
 
-    const durationMin = service.includes('Manicure') && !service.includes('Barber') && !service.includes('Pedicure') ? 45 : 60;
+    const durationMin =
+      service === 'Manicure' && !service.includes('Barber') ? 45 : 60;
     const calendarLink = buildCalendarLink(name, phone, service, haircut, date, time, notes, durationMin);
     msg += `📅 Add to Calendar (click to save + set reminder):\n${calendarLink}`;
 
