@@ -37,7 +37,8 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "BarberShop",
+      "@type": ["LocalBusiness", "BarberShop"],
+      "@id": "https://elcache10.com/#business",
       "name": "El Caché 10 Barbershop",
       "image": "https://elcache10.com/images/logo.jpg",
       "url": "https://elcache10.com",
@@ -63,27 +64,20 @@
       "priceRange": "$$",
       "description": "Dominican barbershop in Bronx NY 10453. Haircut Bronx, Dominican style cuts, fade haircut near me, hot towel shave, manicure Bronx, pedicure & money transfer Bronx. La Nacional authorized agent.",
       "sameAs": ["https://www.instagram.com/elcache10/"],
-      "areaServed": {
-        "@type": "City",
-        "name": "Bronx",
-        "containedInPlace": {
-          "@type": "State",
-          "name": "New York"
-        }
-      },
+      "areaServed": "Bronx, NY",
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "5",
-        "bestRating": "5",
-        "worstRating": "1",
-        "ratingCount": "4",
-        "reviewCount": "4"
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1,
+        "ratingCount": 4,
+        "reviewCount": 4
       },
       "review": [
-        {"@type": "Review", "author": {"@type": "Person", "name": "Jean Ferreira"}, "reviewRating": {"@type": "Rating", "ratingValue": "5"}, "reviewBody": "I've known Francis for over 15 years. He has been an elite professional barber."},
-        {"@type": "Review", "author": {"@type": "Person", "name": "Elsa Perez"}, "reviewRating": {"@type": "Rating", "ratingValue": "5"}, "reviewBody": "Son muy amable con los niños hasta dulces le brindan."},
-        {"@type": "Review", "author": {"@type": "Person", "name": "Felix Castillo"}, "reviewRating": {"@type": "Rating", "ratingValue": "5"}, "reviewBody": "This place is the place to go to get a haircut."},
-        {"@type": "Review", "author": {"@type": "Person", "name": "Francis Pimentel"}, "reviewRating": {"@type": "Rating", "ratingValue": "5"}, "reviewBody": "Durro los mejores."}
+        {"@type": "Review", "itemReviewed": {"@id": "https://elcache10.com/#business"}, "author": {"@type": "Person", "name": "Jean Ferreira"}, "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5, "worstRating": 1}, "reviewBody": "I've known Francis for over 15 years. He has been an elite professional barber."},
+        {"@type": "Review", "itemReviewed": {"@id": "https://elcache10.com/#business"}, "author": {"@type": "Person", "name": "Elsa Perez"}, "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5, "worstRating": 1}, "reviewBody": "Son muy amable con los niños hasta dulces le brindan."},
+        {"@type": "Review", "itemReviewed": {"@id": "https://elcache10.com/#business"}, "author": {"@type": "Person", "name": "Felix Castillo"}, "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5, "worstRating": 1}, "reviewBody": "This place is the place to go to get a haircut."},
+        {"@type": "Review", "itemReviewed": {"@id": "https://elcache10.com/#business"}, "author": {"@type": "Person", "name": "Francis Pimentel"}, "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5, "worstRating": 1}, "reviewBody": "Durro los mejores."}
       ]
     }
     </script>
@@ -245,7 +239,7 @@
                                 <source src="videos/franci-video.mp4" type="video/mp4">
                             </video>
                         </div>
-                        <figcaption>Francis — in the chair</figcaption>
+                        <figcaption>Francis — in the chair · <a href="watch/francis.html" class="watch-page-link">Full video page</a></figcaption>
                     </figure>
                     <h4 class="gallery-videos-subheading">Inside the shop</h4>
                     <div class="gallery-videos-grid">
@@ -255,7 +249,7 @@
                                     <source src="videos/shop-3161.mp4" type="video/mp4">
                                 </video>
                             </div>
-                            <figcaption>Walkthrough</figcaption>
+                            <figcaption>Walkthrough · <a href="watch/shop-tour-1.html" class="watch-page-link">Full video page</a></figcaption>
                         </figure>
                         <figure class="gallery-video-card gallery-video-tile">
                             <div class="gallery-video-media gallery-video-media--phone">
@@ -263,7 +257,7 @@
                                     <source src="videos/shop-3163.mp4" type="video/mp4">
                                 </video>
                             </div>
-                            <figcaption>Barbershop atmosphere</figcaption>
+                            <figcaption>Barbershop atmosphere · <a href="watch/shop-tour-2.html" class="watch-page-link">Full video page</a></figcaption>
                         </figure>
                         <figure class="gallery-video-card gallery-video-tile">
                             <div class="gallery-video-media gallery-video-media--phone">
@@ -271,7 +265,7 @@
                                     <source src="videos/shop-3165.mp4" type="video/mp4">
                                 </video>
                             </div>
-                            <figcaption>On the floor</figcaption>
+                            <figcaption>On the floor · <a href="watch/shop-tour-3.html" class="watch-page-link">Full video page</a></figcaption>
                         </figure>
                     </div>
                 </div>

@@ -2027,6 +2027,73 @@ ul {
   }
 }
 
+/* Watch pages — one video per URL for Google video indexing */
+body.watch-page {
+  background: var(--color-bg);
+}
+
+.watch-page-main {
+  padding: 2rem 0 4rem;
+}
+
+.watch-page-head {
+  text-align: center;
+  max-width: 40rem;
+  margin: 0 auto 1.75rem;
+}
+
+.watch-page-head h1 {
+  margin-bottom: 0.75rem;
+}
+
+.watch-page-head p {
+  color: var(--color-text-light);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.watch-video-wrap {
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.watch-video-wrap video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-lg);
+  background: #000;
+}
+
+.watch-video-wrap--wide {
+  max-width: 960px;
+}
+
+.watch-video-wrap--portrait {
+  max-width: 420px;
+}
+
+.watch-back-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}
+
+.gallery-video-card .watch-page-link {
+  color: var(--color-gold);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.gallery-video-card .watch-page-link:hover {
+  color: var(--color-gold-light);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
