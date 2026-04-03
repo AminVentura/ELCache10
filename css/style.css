@@ -714,6 +714,26 @@ ul {
   border-radius: 50%;
 }
 
+/* Section heading with icon inline */
+.section-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-heading-row h2 {
+  margin-bottom: 0;
+}
+
+.heading-icon {
+  width: clamp(32px, 7vw, 44px);
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 /* Service price list — merged services + pricing */
 .service-price-list {
   list-style: none;
