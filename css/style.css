@@ -2108,3 +2108,305 @@ body.watch-page {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================
+   Scroll Reveal
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================
+   Hours Bar
+   ============================================ */
+.hours-bar {
+  background: var(--color-navy);
+  border-bottom: 2px solid var(--color-gold);
+  padding: 0.75rem 0;
+}
+
+.hours-bar-inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  justify-content: center;
+}
+
+.hours-bar-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.hours-bar-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  list-style: none;
+  justify-content: center;
+}
+
+.hours-bar-slots li {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+}
+
+.hours-bar-slots li strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.hours-bar-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-radius: var(--radius);
+  letter-spacing: 0.04em;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+
+.hours-bar-cta:hover {
+  background: var(--color-gold-light);
+  color: var(--color-black);
+}
+
+/* ============================================
+   Pricing Section
+   ============================================ */
+.pricing {
+  background: var(--color-bg);
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.pricing-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  position: relative;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.pricing-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.pricing-card-title {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-navy);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.pricing-list {
+  list-style: none;
+}
+
+.pricing-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.9375rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.pricing-list li:last-child {
+  border-bottom: none;
+}
+
+.pricing-list li span:last-child {
+  font-weight: 700;
+  color: var(--color-navy);
+  white-space: nowrap;
+}
+
+.pricing-card-badge {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.35rem 0.875rem;
+  background: var(--color-red);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+}
+
+.pricing-disclaimer {
+  text-align: center;
+  margin-top: 1.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+}
+
+.pricing-disclaimer a {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.pricing-disclaimer a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   Team Section
+   ============================================ */
+.team {
+  background: var(--color-bg-alt);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .team-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.team-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.team-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.team-card-img-wrap {
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.team-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform var(--transition);
+}
+
+.team-card:hover .team-card-img-wrap img {
+  transform: scale(1.04);
+}
+
+.team-card-body {
+  padding: 1.5rem;
+}
+
+.team-card-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-navy);
+  margin-bottom: 0.25rem;
+}
+
+.team-card-role {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.75rem;
+}
+
+.team-card-bio {
+  font-size: 0.9375rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.team-card-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ============================================
+   Contact 2-col layout on desktop
+   ============================================ */
+@media (min-width: 1024px) {
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .contact-layout .contact-card {
+    max-width: none;
+    margin: 0;
+  }
+
+  .contact-layout .contact-map-wrapper {
+    margin-top: 0;
+  }
+
+  .contact-layout .map-wrapper {
+    height: 480px;
+  }
+}
