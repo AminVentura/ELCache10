@@ -2387,6 +2387,184 @@ body.watch-page {
 }
 
 /* ============================================
+   Also in the Shop — Extras (ATM, Notary, Tax)
+   ============================================ */
+.extras {
+  background: var(--color-bg-alt);
+}
+
+.extras-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .extras-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.extras-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.extras-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.extras-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-black);
+}
+
+.extras-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform var(--transition);
+}
+
+.extras-card:hover .extras-card-img img {
+  transform: scale(1.04);
+}
+
+.extras-card-body {
+  padding: 1.5rem;
+}
+
+.extras-card-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-navy);
+  margin-bottom: 0.5rem;
+}
+
+.extras-card-desc {
+  font-size: 0.9375rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.extras-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-gold);
+  transition: color var(--transition);
+}
+
+.extras-card-cta:hover {
+  color: var(--color-gold-dark);
+  text-decoration: underline;
+}
+
+/* ============================================
+   Chair Rentals — Para Profesionales
+   ============================================ */
+.chair-rental {
+  background: linear-gradient(135deg, var(--color-navy) 0%, #0a0f1a 100%);
+  border-top: 3px solid var(--color-gold);
+  border-bottom: 3px solid var(--color-gold);
+}
+
+.chair-rental .section-deco-icon {
+  filter: brightness(0) invert(1) opacity(0.7);
+}
+
+.chair-rental-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .chair-rental-inner {
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+  }
+}
+
+.chair-rental-img img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(212, 175, 55, 0.35);
+  box-shadow: var(--shadow-lg);
+}
+
+.chair-rental-badge {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.chair-rental-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.chair-rental-body p {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.chair-rental-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.chair-rental-list li {
+  padding: 0.35rem 0.9rem;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-gold-light);
+}
+
+.chair-rental-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ============================================
    Contact 2-col layout on desktop
    ============================================ */
 @media (min-width: 1024px) {
