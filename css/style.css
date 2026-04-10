@@ -2464,6 +2464,18 @@ body.watch-page {
   justify-content: center;
 }
 
+.team-card-contact-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.team-card-contact-row .team-card-btn {
+  flex: 1;
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.5rem;
+}
+
 /* ============================================
    Also in the Shop — Extras (ATM, Notary, Tax)
    ============================================ */
