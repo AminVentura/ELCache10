@@ -2538,6 +2538,22 @@ body.watch-page {
   object-position: center 30%;
 }
 
+/* Full-body team photo: show face & upper body in card crop */
+.team-card .team-card-img-wrap--fullbody {
+  background: var(--color-navy);
+}
+
+.team-card .team-card-img-wrap--fullbody img,
+.team-card .team-photo-fullbody {
+  object-fit: cover;
+  object-position: center 6%;
+}
+
+.team-card:hover .team-card-img-wrap--fullbody img {
+  transform: scale(1.04);
+  object-position: center 4%;
+}
+
 .team-card-body {
   padding: 1.5rem;
 }
