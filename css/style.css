@@ -609,7 +609,7 @@ ul {
 
 /* Services */
 .services {
-  background: var(--color-bg-alt);
+  background: linear-gradient(180deg, var(--color-bg-alt) 0%, #e9eef4 100%);
 }
 
 .services .section-deco-icon {
@@ -790,6 +790,98 @@ ul {
 .service-price-disclaimer a {
   color: var(--color-gold);
   font-weight: 600;
+}
+
+.services-lede-em {
+  font-weight: 600;
+  color: var(--color-gold-dark);
+}
+
+/* Per-card price notes (barber + nails) */
+.service-in-card-note {
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-light);
+  background: rgba(15, 23, 42, 0.045);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--color-gold);
+}
+
+.service-in-card-note .lang-en {
+  display: block;
+}
+
+.service-in-card-note .lang-es {
+  display: block;
+  font-size: 0.8em;
+  margin-top: 0.3em;
+  opacity: 0.95;
+}
+
+@media (min-width: 640px) {
+  .service-in-card-note .lang-es {
+    display: inline;
+    margin-top: 0;
+    margin-left: 0.35em;
+  }
+
+  .service-in-card-note .lang-es::before {
+    content: "· ";
+    font-weight: 400;
+  }
+}
+
+.service-in-card-note--nail {
+  border-left-color: var(--color-navy-light);
+  background: rgba(30, 41, 59, 0.05);
+}
+
+/* Nail card — modern accent */
+.service-category-kicker {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+  margin: -0.25rem 0 0.65rem;
+}
+
+.service-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.service-pill-list li {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.14);
+  color: var(--color-navy);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.service-category-card--nails {
+  background: linear-gradient(165deg, #ffffff 0%, #f8fafc 45%, #eef2f7 100%);
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  box-shadow: 0 10px 36px rgba(15, 23, 42, 0.07);
+}
+
+.service-category-card--nails .service-category-icon {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.service-category-card--nails .service-category-title {
+  color: var(--color-navy);
 }
 
 .service-category-badge {
@@ -2428,6 +2520,22 @@ body.watch-page {
 
 .team-card:hover .team-card-img-wrap img {
   transform: scale(1.04);
+}
+
+/* Jariel portrait: frame face (avoid cap-only crop) */
+.team-card-img-wrap--jariel {
+  background: var(--color-navy);
+}
+
+.team-card .team-card-img-wrap--jariel img,
+.team-card .team-photo-jariel {
+  object-position: center 32%;
+  object-fit: cover;
+}
+
+.team-card:hover .team-card-img-wrap--jariel img {
+  transform: scale(1.05);
+  object-position: center 30%;
 }
 
 .team-card-body {
