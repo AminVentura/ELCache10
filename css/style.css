@@ -2600,6 +2600,76 @@ body.watch-page {
   padding: 0.5rem 0.5rem;
 }
 
+.barber-booking {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg-alt);
+}
+
+.barber-booking-label {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-navy);
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+}
+
+.barber-booking h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-navy);
+  margin-bottom: 0.3rem;
+}
+
+.barber-booking-subtitle {
+  font-size: 0.8125rem;
+  color: var(--color-text-light);
+  margin-bottom: 0.75rem;
+}
+
+.barber-booking-toggle {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.barber-booking-form[hidden] {
+  display: none !important;
+}
+
+.barber-booking .booking-field {
+  margin-bottom: 0.75rem;
+}
+
+.barber-booking .booking-field:last-of-type {
+  margin-bottom: 0.9rem;
+}
+
+.barber-booking .booking-field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.barber-booking .booking-field input,
+.barber-booking .booking-field select,
+.barber-booking .booking-field textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+  margin: 0;
+}
+
 /* ============================================
    Also in the Shop — Extras (ATM, Notary, Tax)
    ============================================ */
@@ -2801,4 +2871,699 @@ body.watch-page {
   .contact-layout .map-wrapper {
     height: 480px;
   }
+}
+
+/* ============================================
+   WHY US — Value propositions
+   ============================================ */
+.why-us {
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+}
+
+.value-props {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .value-props {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .value-props {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.value-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.value-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-red) 100%);
+  opacity: 0.85;
+}
+
+.value-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(212, 175, 55, 0.55);
+}
+
+.value-card-icon {
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  color: var(--color-black);
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.32);
+}
+
+.value-card-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.value-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.01em;
+}
+
+.value-card p {
+  color: var(--color-text-light);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.value-card a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
+.value-card a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   GUIDE — Haircut & fade guide
+   ============================================ */
+.guide {
+  background: var(--color-bg);
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 640px) {
+  .guide-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .guide-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.guide-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.4rem 1.4rem;
+  border-left: 4px solid var(--color-gold);
+  transition: transform var(--transition), box-shadow var(--transition), border-left-color var(--transition);
+}
+
+.guide-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-left-color: var(--color-red);
+}
+
+.guide-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-navy);
+  margin-bottom: 0.55rem;
+  letter-spacing: 0.02em;
+}
+
+.guide-card p {
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+}
+
+.guide-card p:last-child {
+  margin-bottom: 0;
+}
+
+.guide-pro-tip {
+  background: rgba(212, 175, 55, 0.12);
+  border-left: 3px solid var(--color-gold);
+  padding: 0.65rem 0.85rem;
+  border-radius: 4px;
+  font-size: 0.875rem !important;
+  color: var(--color-text) !important;
+}
+
+.guide-section-title {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  color: var(--color-navy);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.guide-faces {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .guide-faces {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .guide-faces {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.guide-face {
+  background: var(--color-navy);
+  color: #fff;
+  padding: 1.4rem 1.2rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.guide-face:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-gold);
+}
+
+.guide-face h4 {
+  font-family: var(--font-display);
+  color: var(--color-gold);
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+.guide-face p {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+
+.guide-face strong {
+  color: var(--color-gold-light);
+}
+
+/* ============================================
+   TRADITION — Dominican barbering article
+   ============================================ */
+.tradition {
+  background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+}
+
+.tradition-content {
+  max-width: 880px;
+  margin: 2rem auto 0;
+}
+
+.tradition-content p {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+}
+
+.tradition-content p strong {
+  color: var(--color-navy);
+}
+
+.tradition-content em {
+  color: var(--color-gold-dark);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.tradition-pillars {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.tradition-pillars li {
+  background: var(--color-bg);
+  border-left: 4px solid var(--color-gold);
+  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.tradition-pillars li strong {
+  color: var(--color-navy);
+}
+
+/* ============================================
+   BEARD CARE
+   ============================================ */
+.beard-care {
+  background: var(--color-bg);
+}
+
+.beard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .beard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .beard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.beard-card {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.4rem;
+  position: relative;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.beard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.beard-step {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  background: var(--color-navy);
+  padding: 0.25rem 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.beard-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-navy);
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.02em;
+}
+
+.beard-card p {
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.beard-card p strong {
+  color: var(--color-navy);
+}
+
+.beard-callout {
+  background: linear-gradient(135deg, var(--color-navy) 0%, #0a0f1a 100%);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.6rem;
+  border-top: 3px solid var(--color-red);
+  border-bottom: 3px solid var(--color-gold);
+}
+
+.beard-callout h3 {
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.beard-callout ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.beard-callout li {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1rem;
+  line-height: 1.65;
+  padding: 0.55rem 0 0.55rem 1.5rem;
+  position: relative;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.beard-callout li:last-child {
+  border-bottom: none;
+}
+
+.beard-callout li::before {
+  content: "✗";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  color: var(--color-red);
+  font-weight: 700;
+}
+
+.beard-callout li strong {
+  color: var(--color-gold-light);
+}
+
+/* ============================================
+   NAIL CARE
+   ============================================ */
+.nail-care {
+  background: var(--color-bg-alt);
+}
+
+.nail-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .nail-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.nail-block {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.4rem;
+  border-top: 3px solid var(--color-red);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.nail-block:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.nail-block h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-navy);
+  margin-bottom: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+.nail-block p {
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.nail-block p strong,
+.nail-block p em {
+  color: var(--color-navy);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.nail-hygiene {
+  background: var(--color-bg);
+  border: 2px solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-align: center;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.nail-hygiene h3 {
+  font-family: var(--font-display);
+  color: var(--color-gold-dark);
+  font-size: 1.3rem;
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.02em;
+}
+
+.nail-hygiene p {
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ============================================
+   GLOSSARY
+   ============================================ */
+.glossary {
+  background: var(--color-bg);
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 640px) {
+  .glossary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .glossary-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.glossary-term {
+  background: var(--color-bg-alt);
+  border-left: 3px solid var(--color-gold);
+  padding: 0.95rem 1rem;
+  border-radius: 6px;
+  transition: transform var(--transition), border-left-color var(--transition), background var(--transition);
+}
+
+.glossary-term:hover {
+  transform: translateY(-2px);
+  border-left-color: var(--color-red);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.glossary-term h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--color-navy);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.glossary-term p {
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ============================================
+   COMMUNITY — Bronx 10453
+   ============================================ */
+.community {
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
+}
+
+.community-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .community-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.community-block {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.4rem;
+  border-bottom: 3px solid var(--color-gold);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.community-block:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.community-block h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-navy);
+  margin-bottom: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+.community-block p {
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.community-block p strong {
+  color: var(--color-navy);
+}
+
+.community-block p em {
+  color: var(--color-gold-dark);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ============================================
+   FAQ
+   ============================================ */
+.faq {
+  background: var(--color-bg);
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 880px;
+  margin: 2rem auto 0;
+}
+
+.faq-item {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.faq-item[open] {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-sm);
+}
+
+.faq-item summary {
+  padding: 1rem 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+  padding-right: 2.75rem;
+  letter-spacing: 0.01em;
+  transition: color var(--transition);
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--color-gold);
+  transition: transform var(--transition);
+  line-height: 1;
+}
+
+.faq-item[open] summary::after {
+  content: "−";
+  color: var(--color-red);
+}
+
+.faq-item summary:hover {
+  color: var(--color-gold-dark);
+}
+
+.faq-answer {
+  padding: 0 1.2rem 1.1rem;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.faq-answer p {
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  padding-top: 0.85rem;
+  margin: 0;
+}
+
+.faq-answer p strong {
+  color: var(--color-navy);
+}
+
+.faq-answer a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
+.faq-answer a:hover {
+  text-decoration: underline;
 }
