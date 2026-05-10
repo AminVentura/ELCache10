@@ -28,10 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initLangSwitcher();
   initBooksyBooking();
   initBooking();
+  initBarberCardsBooking();
   initHeader();
   initYear();
   initLightbox();
   initReveal();
+  initCollapsibles();
+  initBackToTop();
+  initScrollProgress();
 });
 
 /** When the site opens inside Google Translate (iframe), offset fixed header so it sits below their toolbar. */
@@ -219,6 +223,76 @@ function initBooking() {
   });
 }
 
+function initBarberCardsBooking() {
+  const bookingCards = document.querySelectorAll('.barber-booking');
+  if (!bookingCards.length) return;
+
+  const today = new Date().toISOString().split('T')[0];
+
+  bookingCards.forEach((card) => {
+    const toggleBtn = card.querySelector('.barber-booking-toggle');
+    const form = card.querySelector('.barber-booking-form');
+    const dateInput = form?.querySelector('input[name="date"]');
+    const barberName = card.getAttribute('data-barber-name') || 'Barbero';
+    const personalWhatsApp =
+      card.getAttribute('data-whatsapp') ||
+      card.closest('.team-card')?.querySelector('a[href^="https://wa.me/"]')?.getAttribute('href') ||
+      'https://wa.me/16463349409';
+
+    if (!toggleBtn || !form) return;
+
+    if (dateInput) dateInput.setAttribute('min', today);
+
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = form.hasAttribute('hidden');
+
+      document.querySelectorAll('.barber-booking-form').forEach((otherForm) => {
+        if (otherForm !== form) otherForm.setAttribute('hidden', '');
+      });
+
+      document.querySelectorAll('.barber-booking-toggle').forEach((otherBtn) => {
+        if (otherBtn !== toggleBtn) otherBtn.textContent = `Reservar con ${otherBtn.closest('.barber-booking')?.getAttribute('data-barber-name') || 'barbero'}`;
+      });
+
+      if (isHidden) {
+        form.removeAttribute('hidden');
+        toggleBtn.textContent = 'Ocultar formulario';
+      } else {
+        form.setAttribute('hidden', '');
+        toggleBtn.textContent = `Reservar con ${barberName}`;
+      }
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const service = form.querySelector('select[name="service"]')?.value?.trim();
+      const date = form.querySelector('input[name="date"]')?.value?.trim();
+      const time = form.querySelector('input[name="time"]')?.value?.trim();
+      const plate = form.querySelector('input[name="plate"]')?.value?.trim();
+      const vehicle = form.querySelector('textarea[name="vehicle"]')?.value?.trim();
+
+      if (!service || !date || !time || !plate || !vehicle) {
+        alert('Completa todos los campos requeridos para enviar la cita.');
+        return;
+      }
+
+      let msg = '*Reserva de cita - El Caché 10*\n\n';
+      msg += `Barbero elegido: ${barberName}\n`;
+      msg += `Tipo de servicio: ${service}\n`;
+      msg += `Fecha: ${date}\n`;
+      msg += `Hora preferida: ${time}\n`;
+      msg += `Nombre del cliente: ${plate}\n`;
+      msg += `Descripción: ${vehicle}\n\n`;
+      msg += '_Confirma por WhatsApp, por favor._';
+
+      const separator = personalWhatsApp.includes('?') ? '&' : '?';
+      const url = `${personalWhatsApp}${separator}text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+  });
+}
+
 function initYear() {
   const el = document.getElementById('year');
   if (el) el.textContent = new Date().getFullYear();
@@ -274,4 +348,104 @@ function initReveal() {
     });
   }, { threshold: 0.12 });
   els.forEach(el => observer.observe(el));
+}
+
+/**
+ * Mobile-first collapsibles: sections marked .collapsible-section show a
+ * preview teaser on mobile (max-height + fade mask) and reveal the rest
+ * when the user clicks the toggle. Desktop always shows full content.
+ *
+ * Inspired by prediccionloteria.com — modernized with smooth height
+ * animation, glassmorphism toggle, animated chevron and ARIA states.
+ */
+function initCollapsibles() {
+  const sections = document.querySelectorAll('.collapsible-section');
+  if (!sections.length) return;
+
+  sections.forEach((section) => {
+    const toggle = section.querySelector('.collapsible-toggle');
+    const content = section.querySelector('.collapsible-content');
+    if (!toggle || !content) return;
+
+    const open = () => {
+      section.classList.add('is-expanded');
+      toggle.setAttribute('aria-expanded', 'true');
+      const labelEl = toggle.querySelector('.collapsible-toggle-text');
+      if (labelEl) {
+        const expandedText = toggle.dataset.expandedLabel || 'Mostrar menos';
+        labelEl.textContent = expandedText;
+      }
+    };
+
+    const close = () => {
+      section.classList.remove('is-expanded');
+      toggle.setAttribute('aria-expanded', 'false');
+      const labelEl = toggle.querySelector('.collapsible-toggle-text');
+      if (labelEl) {
+        const collapsedText = toggle.dataset.collapsedLabel || 'Leer más';
+        labelEl.textContent = collapsedText;
+      }
+    };
+
+    toggle.addEventListener('click', () => {
+      const isExpanded = section.classList.contains('is-expanded');
+      if (isExpanded) {
+        close();
+        const top = section.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top, behavior: 'smooth' });
+      } else {
+        open();
+      }
+    });
+
+    if (!toggle.hasAttribute('aria-controls') && content.id) {
+      toggle.setAttribute('aria-controls', content.id);
+    }
+    if (!toggle.hasAttribute('aria-expanded')) {
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+/**
+ * Floating "back to top" button that appears after the user scrolls
+ * past the first viewport. Hidden by CSS until .is-visible.
+ */
+function initBackToTop() {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+  const onScroll = () => {
+    if (window.scrollY > window.innerHeight * 0.6) {
+      btn.classList.add('is-visible');
+    } else {
+      btn.classList.remove('is-visible');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  onScroll();
+}
+
+/**
+ * Slim scroll-progress bar at the very top of the viewport.
+ * Pure visual flourish — disabled if user prefers reduced motion.
+ */
+function initScrollProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    bar.style.display = 'none';
+    return;
+  }
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    bar.style.transform = `scaleX(${Math.min(100, Math.max(0, pct)) / 100})`;
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
 }

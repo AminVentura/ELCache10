@@ -3567,3 +3567,312 @@ body.watch-page {
 .faq-answer a:hover {
   text-decoration: underline;
 }
+
+/* ============================================
+   COLLAPSIBLE SECTIONS — Mobile-first preview
+   Modern glassmorphism toggle with animated chevron.
+   On desktop the toggle is hidden and content is fully visible.
+   On mobile the section shows a teaser with a fade mask, expanded
+   on click.
+   ============================================ */
+
+.collapsible-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem;
+  margin-left: auto;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-navy);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(241, 245, 249, 0.85) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition), color var(--transition);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 1px 3px rgba(10, 10, 10, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.collapsible-toggle:hover,
+.collapsible-toggle:focus-visible {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  border-color: var(--color-gold);
+  color: var(--color-black);
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
+  outline: none;
+}
+
+.collapsible-chevron {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--transition);
+  flex-shrink: 0;
+}
+
+.collapsible-section.is-expanded .collapsible-chevron {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  position: relative;
+}
+
+.collapsible-fade {
+  display: none;
+}
+
+/* Mobile: collapse the body of long sections to a teaser */
+@media (max-width: 767px) {
+  .collapsible-section .collapsible-content {
+    max-height: 360px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
+    transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1), -webkit-mask-image 0.3s ease, mask-image 0.3s ease;
+  }
+
+  .collapsible-section.is-expanded .collapsible-content {
+    max-height: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .collapsible-section .collapsible-fade {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, var(--color-bg) 95%);
+  }
+
+  /* Sections with a different background color get a matching fade */
+  .why-us .collapsible-fade,
+  .community .collapsible-fade {
+    background: linear-gradient(180deg, transparent 0%, var(--color-bg-alt) 95%);
+  }
+
+  .nail-care .collapsible-fade {
+    background: linear-gradient(180deg, transparent 0%, var(--color-bg-alt) 95%);
+  }
+
+  .collapsible-section.is-expanded .collapsible-fade {
+    display: none;
+  }
+}
+
+/* Desktop: hide the toggle button, content always fully visible */
+@media (min-width: 768px) {
+  .collapsible-toggle {
+    display: none;
+  }
+}
+
+/* Section heading row needs to wrap on mobile so the toggle drops below the title */
+.section-heading-row {
+  flex-wrap: wrap;
+}
+
+.section-heading-row h2 {
+  flex: 1 1 auto;
+}
+
+/* Respect reduced motion for collapsibles */
+@media (prefers-reduced-motion: reduce) {
+  .collapsible-section .collapsible-content,
+  .collapsible-chevron,
+  .collapsible-toggle {
+    transition: none;
+  }
+}
+
+/* ============================================
+   SCROLL PROGRESS BAR — Futuristic top accent
+   ============================================ */
+.scroll-progress {
+  position: fixed;
+  top: var(--embed-frame-offset, 0px);
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-red) 50%, var(--color-gold) 100%);
+  background-size: 200% 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
+  animation: scrollProgressShimmer 6s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scrollProgressShimmer {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress {
+    animation: none;
+  }
+}
+
+/* ============================================
+   BACK TO TOP — Floating futuristic button
+   ============================================ */
+.back-to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: 5.75rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(10, 10, 10, 0.9) 100%);
+  color: var(--color-gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 998;
+  opacity: 0;
+  transform: translateY(12px) scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 0 rgba(212, 175, 55, 0.4);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  color: var(--color-black);
+  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.5), 0 0 0 6px rgba(212, 175, 55, 0.15);
+  outline: none;
+}
+
+.back-to-top svg {
+  width: 22px;
+  height: 22px;
+}
+
+@media (min-width: 768px) {
+  .back-to-top {
+    right: 1.5rem;
+    bottom: 1.75rem;
+    width: 54px;
+    height: 54px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top {
+    transition: opacity 0.2s linear;
+  }
+}
+
+/* ============================================
+   MODERN FUTURISTIC ACCENTS — refresh existing cards
+   Subtle gradient borders, glow halos, hover lift-off
+   for the value-cards / guide / community / glossary terms.
+   ============================================ */
+.value-card,
+.guide-card,
+.beard-card,
+.nail-block,
+.community-block {
+  isolation: isolate;
+}
+
+.value-card,
+.community-block {
+  position: relative;
+}
+
+.value-card::after,
+.community-block::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0) 0%, rgba(212, 175, 55, 0) 50%, rgba(196, 30, 58, 0.45) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.value-card:hover::after,
+.community-block:hover::after {
+  opacity: 1;
+}
+
+/* Subtle ambient gradient backdrop on the haircut guide and tradition sections */
+.guide,
+.tradition,
+.glossary {
+  position: relative;
+  overflow: hidden;
+}
+
+.guide::before,
+.tradition::before,
+.glossary::before {
+  content: "";
+  position: absolute;
+  inset: -20% -20% auto auto;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.guide .container,
+.tradition .container,
+.glossary .container {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guide-card,
+  .beard-card,
+  .nail-block,
+  .glossary-term {
+    transition-property: transform, box-shadow, border-color, border-left-color, background;
+    transition-duration: 0.35s;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* Smooth, slightly futuristic lift on hover for value-cards on touch-supported devices that also have hover (laptops with touch) */
+@media (hover: hover) {
+  .value-card:hover .value-card-icon {
+    transform: rotate(-4deg) scale(1.04);
+    box-shadow: 0 6px 22px rgba(212, 175, 55, 0.45);
+  }
+
+  .value-card-icon {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  }
+}
