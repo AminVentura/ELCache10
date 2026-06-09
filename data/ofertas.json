@@ -1,26 +1,5 @@
 {
   "version": 1,
-  "updated_at": "2026-06-09T02:44:14.624Z",
-  "ofertas": [
-    {
-      "id": "oferta-fade-semana",
-      "titulo": "Fade de la semana",
-      "descripcion": "Promo editable desde el admin. Sube una foto nueva, ajusta el texto y publica el especial de la semana.",
-      "imagen_base64": "",
-      "fecha_inicio": "08/06/2026",
-      "fecha_fin": "30/06/2026",
-      "publicada": true,
-      "orden": 1
-    },
-    {
-      "id": "oferta-de-verano-1780973054599",
-      "titulo": "Oferta de Verano",
-      "descripcion": "Oferta de verano",
-      "imagen_base64": "",
-      "fecha_inicio": "08/06/2026",
-      "fecha_fin": "09/06/2026",
-      "publicada": true,
-      "orden": 2
-    }
-  ]
+  "updated_at": "2026-06-09T03:01:12.607Z",
+  "ofertas": []
 }
