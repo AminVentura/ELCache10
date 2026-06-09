@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-06-09T02:33:28.684Z",
+  "updated_at": "2026-06-09T02:44:14.624Z",
   "ofertas": [
     {
       "id": "oferta-fade-semana",
@@ -11,6 +11,16 @@
       "fecha_fin": "30/06/2026",
       "publicada": true,
       "orden": 1
+    },
+    {
+      "id": "oferta-de-verano-1780973054599",
+      "titulo": "Oferta de Verano",
+      "descripcion": "Oferta de verano",
+      "imagen_base64": "",
+      "fecha_inicio": "08/06/2026",
+      "fecha_fin": "09/06/2026",
+      "publicada": true,
+      "orden": 2
     }
   ]
 }
