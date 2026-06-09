@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "updated_at": "2026-06-09T01:50:42.336Z",
+  "servicios": [
+    {
+      "id": "barber-dominican-style",
+      "categoria": "Barber Services",
+      "nombre": "Dominican Style Haircuts",
+      "precio_centavos": 2000,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 1
+    },
+    {
+      "id": "barber-fade",
+      "categoria": "Barber Services",
+      "nombre": "Fade",
+      "precio_centavos": 2500,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 2
+    },
+    {
+      "id": "barber-caesar",
+      "categoria": "Barber Services",
+      "nombre": "Caesar Cut",
+      "precio_centavos": 2000,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 3
+    },
+    {
+      "id": "barber-hot-towel",
+      "categoria": "Barber Services",
+      "nombre": "Hot Towel Shave",
+      "precio_centavos": 3000,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 4
+    },
+    {
+      "id": "barber-blow-dry",
+      "categoria": "Barber Services",
+      "nombre": "Blow dry / Secado de pelo",
+      "precio_centavos": 3000,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 5
+    },
+    {
+      "id": "barber-kids-cut",
+      "categoria": "Barber Services",
+      "nombre": "Kids Cut",
+      "precio_centavos": 1800,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 6
+    },
+    {
+      "id": "nails-manicure",
+      "categoria": "Nail Services",
+      "nombre": "Manicure",
+      "precio_centavos": 3000,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 1
+    },
+    {
+      "id": "nails-pedicure",
+      "categoria": "Nail Services",
+      "nombre": "Pedicure",
+      "precio_centavos": 4500,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 2
+    },
+    {
+      "id": "nails-acrylic",
+      "categoria": "Nail Services",
+      "nombre": "Acrylic Nails",
+      "precio_centavos": 4500,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 3
+    },
+    {
+      "id": "money-transfer-la-nacional",
+      "categoria": "Money Transfer",
+      "nombre": "La Nacional Money Transfers",
+      "precio_centavos": null,
+      "etiqueta": "Ask for price",
+      "disponible": true,
+      "orden": 1
+    },
+    {
+      "id": "money-transfer-domestic-international",
+      "categoria": "Money Transfer",
+      "nombre": "Domestic & International",
+      "precio_centavos": null,
+      "etiqueta": "",
+      "disponible": true,
+      "orden": 2
+    }
+  ]
+}
