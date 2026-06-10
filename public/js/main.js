@@ -1,0 +1,568 @@
+/* El Caché 10 Barbershop - Optimized */
+
+/** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / “Copy link”). */
+const BOOKSY_BOOKING_URL = '';
+
+let lightboxTrigger = null;
+
+function buildCalendarLink(name, phone, service, haircut, date, time, notes, durationMin) {
+  const [y, m, d] = date.split('-').map(Number);
+  const [h, min] = time.split(':').map(Number);
+  const start = new Date(y, m - 1, d, h, min);
+  const end = new Date(start.getTime() + durationMin * 60000);
+  const pad = (n) => String(n).padStart(2, '0');
+  const fmt = (dt) => `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}T${pad(dt.getHours())}${pad(dt.getMinutes())}00`;
+  const title = encodeURIComponent(`Cita: ${name} - ${service}`);
+  let details = `Cliente: ${name}\nTel: ${phone}\nServicio: ${service}`;
+  if (haircut && service.includes('Barber')) details += `\nCorte: ${haircut}`;
+  if (notes) details += `\nNotas: ${notes}`;
+  details += `\n\nEl Caché 10 Barbershop\n1942 Harrison Ave, Bronx, NY 10453\nTel: (646) 334-9409`;
+  const dates = `${fmt(start)}/${fmt(end)}`;
+  const location = encodeURIComponent('1942 Harrison Ave, Bronx, NY 10453');
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${encodeURIComponent(details)}&location=${location}&ctz=America/New_York`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initEmbeddedFrame();
+  initNav();
+  initLangSwitcher();
+  initBooksyBooking();
+  initBooking();
+  initBarberCardsBooking();
+  initHeader();
+  initYear();
+  initLightbox();
+  initReveal();
+  initCollapsibles();
+  initBackToTop();
+  initScrollProgress();
+  initDynamicOffersAndPrices();
+});
+
+/** When the site opens inside Google Translate (iframe), offset fixed header so it sits below their toolbar. */
+function initEmbeddedFrame() {
+  try {
+    if (window.self !== window.top) {
+      document.documentElement.classList.add('is-embedded-frame');
+    }
+  } catch (e) {
+    /* cross-origin edge cases */
+  }
+}
+
+/** URL sent to Google Translate (canonical when https, else live page, else production root). */
+function pageUrlForTranslate() {
+  const c = document.querySelector('link[rel="canonical"]');
+  if (c?.href && /^https?:\/\//i.test(c.href)) return c.href;
+  if (/^https?:/i.test(window.location.protocol)) return window.location.href.split('#')[0];
+  return 'https://elcache10.com/';
+}
+
+function initLangSwitcher() {
+  const u = encodeURIComponent(pageUrlForTranslate());
+  document.querySelectorAll('[data-google-translate]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tl = btn.getAttribute('data-google-translate');
+      window.location.href = `https://translate.google.com/translate?sl=auto&tl=${tl}&u=${u}`;
+    });
+  });
+}
+
+function initBooksyBooking() {
+  const url = typeof BOOKSY_BOOKING_URL === 'string' ? BOOKSY_BOOKING_URL.trim() : '';
+  const hasBooksy = /^https?:\/\//i.test(url);
+  document.querySelectorAll('[data-booksy-book-btn]').forEach((btn) => {
+    if (hasBooksy) {
+      btn.href = url;
+      btn.setAttribute('aria-label', 'Book on Booksy — open live schedule');
+      const label = btn.querySelector('.booksy-btn-text');
+      if (label) label.textContent = 'Book on Booksy';
+    } else {
+      btn.href =
+        'https://wa.me/16463349409?text=' +
+        encodeURIComponent(
+          'Hi! Please send me the El Caché 10 Booksy booking link so I can reserve a time online.'
+        );
+      btn.setAttribute('aria-label', 'Request Booksy booking link on WhatsApp');
+      const label = btn.querySelector('.booksy-btn-text');
+      if (label) label.textContent = 'Get Booksy link on WhatsApp';
+    }
+  });
+}
+
+function initNav() {
+  const toggle = document.querySelector('.nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  if (!toggle || !navLinks) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const lb = document.getElementById('lightbox');
+      if (lb?.classList.contains('is-open')) closeLightbox();
+      else {
+        navLinks.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+    }
+  });
+}
+
+function initHeader() {
+  const header = document.querySelector('.header');
+  if (!header) return;
+  window.addEventListener('scroll', () => {
+    header.style.boxShadow = window.scrollY > 50 ? '0 2px 20px rgba(0,0,0,0.15)' : '';
+  }, { passive: true });
+}
+
+function initBooking() {
+  const form = document.getElementById('booking-form');
+  const btn = document.getElementById('booking-whatsapp-btn');
+  const calBtn = document.getElementById('booking-calendar-btn');
+  const serviceSelect = document.getElementById('booking-service');
+  const haircutWrap = document.getElementById('haircut-type-wrap');
+  const staffWrap = document.getElementById('staff-preference-wrap');
+  const staffSelect = document.getElementById('booking-staff');
+  const dateInput = document.getElementById('booking-date');
+  if (!form || !btn) return;
+
+  const today = new Date().toISOString().split('T')[0];
+  if (dateInput) dateInput.setAttribute('min', today);
+
+  const staffOptions = {
+    barber: [
+      { value: '', label: 'Any available' },
+      { value: 'Barber 1', label: 'Barber 1' },
+      { value: 'Barber 2', label: 'Barber 2' },
+      { value: 'Barber 3', label: 'Barber 3' }
+    ],
+    nails: [
+      { value: '', label: 'Any available' },
+      { value: 'Nail technician', label: 'Nail technician' }
+    ],
+    combo: [
+      { value: '', label: 'Any available' },
+      { value: 'Barber 1', label: 'Barber 1' },
+      { value: 'Barber 2', label: 'Barber 2' },
+      { value: 'Barber 3', label: 'Barber 3' },
+      { value: 'Nail technician', label: 'Nail technician' }
+    ]
+  };
+
+  function updateStaffOptions() {
+    const val = serviceSelect?.value || '';
+    let opts = staffOptions.combo;
+    if (val === 'Barber' || val === 'Blow dry / Secado de pelo') opts = staffOptions.barber;
+    else if (val === 'Manicure' || val === 'Pedicure' || val === 'Acrylic nails') opts = staffOptions.nails;
+    staffSelect.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+  }
+
+  function toggleHaircutField() {
+    const val = serviceSelect?.value || '';
+    haircutWrap.style.display = val.includes('Barber') || val === 'Blow dry / Secado de pelo' ? 'block' : 'none';
+  }
+
+  serviceSelect?.addEventListener('change', () => {
+    toggleHaircutField();
+    updateStaffOptions();
+  });
+  toggleHaircutField();
+  updateStaffOptions();
+
+  btn.addEventListener('click', () => {
+    const name = document.getElementById('booking-name')?.value?.trim();
+    const phone = document.getElementById('booking-phone')?.value?.trim();
+    const service = document.getElementById('booking-service')?.value;
+    const haircut = document.getElementById('booking-haircut')?.value;
+    const staff = document.getElementById('booking-staff')?.value;
+    const staffContact = document.getElementById('booking-staff-contact')?.value?.trim();
+    const date = document.getElementById('booking-date')?.value;
+    const time = document.getElementById('booking-time')?.value;
+    const timeAlt = document.getElementById('booking-time-alt')?.value?.trim();
+    const notes = document.getElementById('booking-notes')?.value?.trim();
+
+    if (!name || !phone || !service || !date || !time) {
+      alert('Please fill in Name, Phone, Service, Date and Time.');
+      return;
+    }
+
+    let msg = `*Appointment Request - El Caché 10*\n\n`;
+    msg += `Name: ${name}\n`;
+    msg += `Phone: ${phone}\n`;
+    msg += `Service: ${service}\n`;
+    if (haircut && service.includes('Barber')) msg += `Haircut/Style: ${haircut}\n`;
+    if (staff) msg += `Preferred barber/staff: ${staff}\n`;
+    if (staffContact) msg += `Staff (name/WhatsApp): ${staffContact}\n`;
+    msg += `Date: ${date}\n`;
+    msg += `Preferred Time: ${time}\n`;
+    if (timeAlt) msg += `Alternative time if ${time} is taken: ${timeAlt}\n`;
+    if (notes) msg += `Notes: ${notes}\n\n`;
+    msg += `_If this slot is not available with the requested barber, please suggest the nearest available time. Thanks!_`;
+
+    const durationMin =
+      service === 'Manicure' && !service.includes('Barber') ? 45 : 60;
+    const calendarLink = buildCalendarLink(name, phone, service, haircut, date, time, notes, durationMin);
+    msg += `📅 Add to Calendar (click to save + set reminder):\n${calendarLink}`;
+
+    const url = `https://wa.me/16463349409?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+}
+
+function initBarberCardsBooking() {
+  const bookingCards = document.querySelectorAll('.barber-booking');
+  if (!bookingCards.length) return;
+
+  const today = new Date().toISOString().split('T')[0];
+
+  bookingCards.forEach((card) => {
+    const toggleBtn = card.querySelector('.barber-booking-toggle');
+    const form = card.querySelector('.barber-booking-form');
+    const dateInput = form?.querySelector('input[name="date"]');
+    const barberName = card.getAttribute('data-barber-name') || 'Barbero';
+    const personalWhatsApp =
+      card.getAttribute('data-whatsapp') ||
+      card.closest('.team-card')?.querySelector('a[href^="https://wa.me/"]')?.getAttribute('href') ||
+      'https://wa.me/16463349409';
+
+    if (!toggleBtn || !form) return;
+
+    if (dateInput) dateInput.setAttribute('min', today);
+
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = form.hasAttribute('hidden');
+
+      document.querySelectorAll('.barber-booking-form').forEach((otherForm) => {
+        if (otherForm !== form) otherForm.setAttribute('hidden', '');
+      });
+
+      document.querySelectorAll('.barber-booking-toggle').forEach((otherBtn) => {
+        if (otherBtn !== toggleBtn) otherBtn.textContent = `Reservar con ${otherBtn.closest('.barber-booking')?.getAttribute('data-barber-name') || 'barbero'}`;
+      });
+
+      if (isHidden) {
+        form.removeAttribute('hidden');
+        toggleBtn.textContent = 'Ocultar formulario';
+      } else {
+        form.setAttribute('hidden', '');
+        toggleBtn.textContent = `Reservar con ${barberName}`;
+      }
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const service = form.querySelector('select[name="service"]')?.value?.trim();
+      const date = form.querySelector('input[name="date"]')?.value?.trim();
+      const time = form.querySelector('input[name="time"]')?.value?.trim();
+      const plate = form.querySelector('input[name="plate"]')?.value?.trim();
+      const vehicle = form.querySelector('textarea[name="vehicle"]')?.value?.trim();
+
+      if (!service || !date || !time || !plate || !vehicle) {
+        alert('Completa todos los campos requeridos para enviar la cita.');
+        return;
+      }
+
+      let msg = '*Reserva de cita - El Caché 10*\n\n';
+      msg += `Barbero elegido: ${barberName}\n`;
+      msg += `Tipo de servicio: ${service}\n`;
+      msg += `Fecha: ${date}\n`;
+      msg += `Hora preferida: ${time}\n`;
+      msg += `Nombre del cliente: ${plate}\n`;
+      msg += `Descripción: ${vehicle}\n\n`;
+      msg += '_Confirma por WhatsApp, por favor._';
+
+      const separator = personalWhatsApp.includes('?') ? '&' : '?';
+      const url = `${personalWhatsApp}${separator}text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
+  });
+}
+
+function initYear() {
+  const el = document.getElementById('year');
+  if (el) el.textContent = new Date().getFullYear();
+}
+
+function initLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const closeBtn = document.querySelector('.lightbox-close');
+  if (!lightbox || !lightboxImg) return;
+
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-lightbox]');
+    if (!trigger) return;
+    e.preventDefault();
+    lightboxTrigger = trigger;
+    lightboxImg.src = trigger.getAttribute('href');
+    lightboxImg.alt = lightboxCaption.textContent = trigger.getAttribute('data-caption') || trigger.querySelector('img')?.alt || '';
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  });
+
+  closeBtn?.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    lightboxTrigger?.focus();
+    lightboxTrigger = null;
+  }
+}
+
+function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => observer.observe(el));
+}
+
+/**
+ * Mobile-first collapsibles: sections marked .collapsible-section show a
+ * preview teaser on mobile (max-height + fade mask) and reveal the rest
+ * when the user clicks the toggle. Desktop always shows full content.
+ *
+ * Inspired by prediccionloteria.com — modernized with smooth height
+ * animation, glassmorphism toggle, animated chevron and ARIA states.
+ */
+function initCollapsibles() {
+  const sections = document.querySelectorAll('.collapsible-section');
+  if (!sections.length) return;
+
+  sections.forEach((section) => {
+    const toggle = section.querySelector('.collapsible-toggle');
+    const content = section.querySelector('.collapsible-content');
+    if (!toggle || !content) return;
+
+    const open = () => {
+      section.classList.add('is-expanded');
+      toggle.setAttribute('aria-expanded', 'true');
+      const labelEl = toggle.querySelector('.collapsible-toggle-text');
+      if (labelEl) {
+        const expandedText = toggle.dataset.expandedLabel || 'Mostrar menos';
+        labelEl.textContent = expandedText;
+      }
+    };
+
+    const close = () => {
+      section.classList.remove('is-expanded');
+      toggle.setAttribute('aria-expanded', 'false');
+      const labelEl = toggle.querySelector('.collapsible-toggle-text');
+      if (labelEl) {
+        const collapsedText = toggle.dataset.collapsedLabel || 'Leer más';
+        labelEl.textContent = collapsedText;
+      }
+    };
+
+    toggle.addEventListener('click', () => {
+      const isExpanded = section.classList.contains('is-expanded');
+      if (isExpanded) {
+        close();
+        const top = section.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top, behavior: 'smooth' });
+      } else {
+        open();
+      }
+    });
+
+    if (!toggle.hasAttribute('aria-controls') && content.id) {
+      toggle.setAttribute('aria-controls', content.id);
+    }
+    if (!toggle.hasAttribute('aria-expanded')) {
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
+/**
+ * Floating "back to top" button that appears after the user scrolls
+ * past the first viewport. Hidden by CSS until .is-visible.
+ */
+function initBackToTop() {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+  const onScroll = () => {
+    if (window.scrollY > window.innerHeight * 0.6) {
+      btn.classList.add('is-visible');
+    } else {
+      btn.classList.remove('is-visible');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  onScroll();
+}
+
+/**
+ * Slim scroll-progress bar at the very top of the viewport.
+ * Pure visual flourish — disabled if user prefers reduced motion.
+ */
+function initScrollProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    bar.style.display = 'none';
+    return;
+  }
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    bar.style.transform = `scaleX(${Math.min(100, Math.max(0, pct)) / 100})`;
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}
+
+async function initDynamicOffersAndPrices() {
+  const [offersData, servicesData] = await Promise.all([
+    loadPublicJson('/data/ofertas.json'),
+    loadPublicJson('/data/servicios.json'),
+  ]);
+  if (servicesData) renderServicePrices(servicesData);
+  if (offersData) renderOffers(offersData);
+}
+
+async function loadPublicJson(path) {
+  const rawUrl = `https://raw.githubusercontent.com/AminVentura/ELCache10/main${path}`;
+  try {
+    const response = await fetch(`${rawUrl}?v=${Date.now()}`, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`${rawUrl} ${response.status}`);
+    return await response.json();
+  } catch (rawError) {
+    console.warn('[ElCache10] GitHub raw no disponible, usando fallback local:', rawError.message);
+  }
+
+  try {
+    const response = await fetch(`${path}?v=${Date.now()}`, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`${path} ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn('[ElCache10] No se pudo cargar JSON dinámico:', error.message);
+    return null;
+  }
+}
+
+function formatCents(value, fallback = '') {
+  if (value === null || value === undefined || value === '') return fallback;
+  const cents = Number(value);
+  if (!Number.isInteger(cents)) return fallback;
+  const dollars = Math.trunc(cents / 100);
+  const remainder = Math.abs(cents % 100);
+  return remainder === 0 ? `$${dollars}` : `$${dollars}.${String(remainder).padStart(2, '0')}`;
+}
+
+function parseRdDate(value, endOfDay = false) {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value || '');
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  return new Date(year, month - 1, day, endOfDay ? 23 : 0, endOfDay ? 59 : 0, endOfDay ? 59 : 0);
+}
+
+function renderServicePrices(data) {
+  if (!Array.isArray(data?.servicios)) return;
+  const targets = {
+    'Barber Services': document.querySelector('[data-service-list="barber"]'),
+    'Nail Services': document.querySelector('[data-service-list="nails"]'),
+    'Money Transfer': document.querySelector('[data-service-list="money"]'),
+  };
+
+  Object.entries(targets).forEach(([category, list]) => {
+    if (!list) return;
+    const services = data.servicios
+      .filter((service) => service.categoria === category && service.disponible)
+      .sort((a, b) => (a.orden || 0) - (b.orden || 0));
+    if (!services.length) return;
+    list.innerHTML = services
+      .map((service) => {
+        const price = service.etiqueta || formatCents(service.precio_centavos, '');
+        const priceClass = price && !price.startsWith('$') ? 'spl-price spl-ask' : 'spl-price';
+        return `<li><span>${escapePublicHtml(service.nombre)}</span><span class="${priceClass}">${escapePublicHtml(price)}</span></li>`;
+      })
+      .join('');
+  });
+}
+
+function renderOffers(data) {
+  const section = document.getElementById('offers');
+  const grid = document.getElementById('offers-grid');
+  if (!section || !grid || !Array.isArray(data?.ofertas)) return;
+  const now = new Date();
+  const activeOffers = data.ofertas
+    .filter((offer) => {
+      if (!offer.publicada) return false;
+      const start = parseRdDate(offer.fecha_inicio);
+      const end = parseRdDate(offer.fecha_fin, true);
+      return start && end && now >= start && now <= end;
+    })
+    .sort((a, b) => (a.orden || 0) - (b.orden || 0));
+
+  if (!activeOffers.length) {
+    section.hidden = true;
+    return;
+  }
+
+  section.hidden = false;
+  grid.innerHTML = activeOffers
+    .map((offer) => {
+      const image = offer.imagen_base64 || 'images/logo.jpg';
+      const message = encodeURIComponent(`Hi El Caché 10! I want this offer: ${offer.titulo}`);
+      return `
+        <article class="offer-card reveal is-visible">
+          <div class="offer-media">
+            <img src="${image}" alt="${escapePublicHtml(offer.titulo)}" loading="lazy" decoding="async">
+          </div>
+          <div class="offer-body">
+            <p class="offer-badge">Oferta activa</p>
+            <h3>${escapePublicHtml(offer.titulo)}</h3>
+            <p>${escapePublicHtml(offer.descripcion)}</p>
+            <p class="offer-date">Disponible hasta ${escapePublicHtml(offer.fecha_fin)}</p>
+            <a class="btn btn-primary" href="https://wa.me/16463349409?text=${message}" target="_blank" rel="noopener noreferrer">Pedir por WhatsApp</a>
+          </div>
+        </article>`;
+    })
+    .join('');
+}
+
+function escapePublicHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+}

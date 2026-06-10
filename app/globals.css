@@ -1,0 +1,266 @@
+:root {
+  color-scheme: light;
+  --gold: #d4af37;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --paper: #ffffff;
+  --line: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: #f8fafc;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 2rem);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.app-brand {
+  color: inherit;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.app-nav a,
+.app-nav button,
+.app-button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  color: var(--ink);
+  background: var(--paper);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.app-button-primary,
+.app-nav button:first-of-type {
+  border-color: var(--gold);
+  background: var(--gold);
+}
+
+.app-main {
+  width: min(980px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(2rem, 7vw, 5rem) 0;
+}
+
+.app-card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: var(--paper);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+}
+
+.app-card h1 {
+  margin-top: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.app-card p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.app-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+}
+
+.barber-admin {
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(212, 175, 55, 0.22), transparent 32rem),
+    radial-gradient(circle at 94% 4%, rgba(148, 163, 184, 0.16), transparent 28rem),
+    linear-gradient(135deg, #050505 0%, #111827 52%, #030712 100%);
+  color: #fff;
+}
+
+.barber-hero,
+.barber-stats article,
+.barber-editor-card {
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  border-radius: 28px;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+}
+
+.barber-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1.5rem;
+  padding: clamp(1.4rem, 4vw, 3rem);
+}
+
+.barber-kicker {
+  margin: 0 0 0.5rem;
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.barber-hero h1,
+.barber-editor-card h2 {
+  margin: 0;
+}
+
+.barber-hero h1 {
+  font-size: clamp(2.35rem, 7vw, 5.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+.barber-hero p {
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.7;
+}
+
+.barber-hero-actions,
+.barber-editor-head {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.barber-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.barber-stats article {
+  padding: 1.2rem;
+}
+
+.barber-stats span {
+  color: var(--gold);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.barber-stats strong {
+  display: block;
+  margin: 0.35rem 0;
+  font-size: 1.35rem;
+}
+
+.barber-stats p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.55;
+}
+
+.barber-editor-card {
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.barber-login-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+  gap: clamp(1rem, 4vw, 2rem);
+  align-items: center;
+  min-height: calc(100vh - 6rem);
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  border-radius: 28px;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+}
+
+.barber-login-card h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.25rem, 7vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.barber-login-card p {
+  max-width: 640px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.barber-editor-head {
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.barber-editor-frame {
+  display: block;
+  width: 100%;
+  min-height: 82vh;
+  border: 0;
+  border-radius: 22px;
+  background: #f8fafc;
+}
+
+.barber-editor-embedded {
+  overflow: hidden;
+  border-radius: 22px;
+  background: #f8fafc;
+}
+
+.barber-editor-embedded .admin-shell {
+  width: 100%;
+  padding: 0;
+}
+
+.barber-editor-embedded .admin-hero {
+  display: none;
+}
+
+.barber-editor-embedded .admin-card {
+  margin-top: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.barber-editor-embedded .admin-card + .admin-card {
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 840px) {
+  .barber-hero,
+  .barber-stats,
+  .barber-login-card {
+    grid-template-columns: 1fr;
+  }
+}

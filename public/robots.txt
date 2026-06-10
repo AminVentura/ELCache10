@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Bloquear superficies privadas, APIs y datos auxiliares.
+# No bloquea CSS, JS, imágenes ni videos necesarios para renderizar el sitio público.
+Disallow: /admin/
+Disallow: /api/
+Disallow: /data/
+Disallow: /public/
+
+# Bloquear archivos de utilidad interna
+Disallow: /_wordcount.cjs
+
+# Bloquear bots de scraping agresivos
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+Sitemap: https://elcache10.com/sitemap.xml
