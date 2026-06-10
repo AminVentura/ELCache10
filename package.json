@@ -1,4 +1,6 @@
 {
+  "name": "el-cache10",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "test": "node --test tests/static-data.test.mjs",
