@@ -1,8 +1,8 @@
 {
   "scripts": {
     "dev": "next dev",
-    "test": "node --test",
-    "build": "npm run test && node generate-sitemap.js && node scripts/build-static.mjs && next build",
+    "test": "node --test tests/static-data.test.mjs",
+    "build": "node generate-sitemap.js && node scripts/build-static.mjs && next build",
     "build:static": "npm run test && node generate-sitemap.js && node scripts/build-static.mjs",
     "check": "node --check js/main.js && node --check js/admin-static.js && node --check lib/static-data.mjs && node --check scripts/build-static.mjs && tsc --noEmit"
   },
