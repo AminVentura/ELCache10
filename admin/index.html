@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Caché 10 — Admin Panel</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--accent:#f59e0b;--accent2:#10b981;--danger:#ef4444;--text:#f1f5f9;--muted:#94a3b8;--border:#334155;--radius:10px;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;}
+    #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+    .auth-card{background:var(--surface);border-radius:var(--radius);padding:40px 32px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+    .auth-card h1{font-size:1.4rem;margin-bottom:8px;}
+    .auth-card p{color:var(--muted);font-size:.875rem;margin-bottom:24px;}
+    .auth-card input{width:100%;padding:12px 14px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:1rem;margin-bottom:12px;}
+    .auth-card button{width:100%;padding:12px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:700;font-size:1rem;cursor:pointer;}
+    #auth-error{color:var(--danger);font-size:.85rem;margin-top:8px;display:none;}
+    #admin-app{display:none;}
+    header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    header h1{font-size:1.1rem;}header h1 span{color:var(--accent);}
+    .header-actions{display:flex;gap:10px;align-items:center;}
+    .btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.875rem;font-weight:600;transition:opacity .2s;}
+    .btn:hover{opacity:.85;}
+    .btn-sm{padding:6px 12px;font-size:.8rem;}
+    .btn-primary{background:var(--accent);color:#000;}
+    .btn-success{background:var(--accent2);color:#000;}
+    .btn-danger{background:var(--danger);color:#fff;}
+    .btn-ghost{background:var(--surface2);color:var(--text);}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+    .logout-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.8rem;}
+    .tabs{display:flex;gap:2px;background:var(--surface);padding:12px 24px 0;border-bottom:1px solid var(--border);overflow-x:auto;}
+    .tab{padding:10px 18px;cursor:pointer;border-radius:8px 8px 0 0;font-size:.875rem;font-weight:600;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;}
+    .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--surface2);}
+    .panel{display:none;padding:24px;max-width:900px;margin:0 auto;}
+    .panel.active{display:block;}
+    .card{background:var(--surface);border-radius:var(--radius);padding:20px;margin-bottom:16px;border:1px solid var(--border);}
+    .card h3{font-size:1rem;margin-bottom:16px;color:var(--accent);}
+    .form-group{margin-bottom:14px;}
+    label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+    input[type="text"],input[type="number"],input[type="password"],textarea,select{width:100%;padding:10px 12px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:.95rem;}
+    input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);border-color:var(--accent);}
+    textarea{resize:vertical;min-height:80px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:580px){.form-row{grid-template-columns:1fr;}}
+    .services-table{width:100%;border-collapse:collapse;font-size:.875rem;}
+    .services-table th{text-align:left;padding:8px 12px;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);}
+    .services-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .services-table tr:last-child td{border-bottom:none;}
+    .services-table input[type="number"]{width:90px;padding:6px 8px;}
+    .services-table input[type="text"]{width:140px;padding:6px 8px;}
+    .badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:.75rem;font-weight:700;}
+    .badge-barber{background:rgba(245,158,11,.15);color:var(--accent);}
+    .badge-nails{background:rgba(236,72,153,.15);color:#ec4899;}
+    .badge-money{background:rgba(16,185,129,.15);color:var(--accent2);}
+    .offer-card{background:var(--surface2);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;}
+    .offer-img{width:80px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--bg);}
+    .offer-info{flex:1;}
+    .offer-info h4{font-size:.95rem;margin-bottom:4px;}
+    .offer-info p{font-size:.8rem;color:var(--muted);margin-bottom:6px;}
+    .offer-actions{display:flex;gap:6px;}
+    .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
+    .status-ok{background:var(--accent2);}
+    .status-err{background:var(--danger);}
+    #toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;font-size:.875rem;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px;}
+    #toast.show{transform:translateY(0);opacity:1;}
+    #toast.success{border-left:3px solid var(--accent2);}
+    #toast.error{border-left:3px solid var(--danger);}
+    .toggle{position:relative;display:inline-block;width:40px;height:22px;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--surface2);border-radius:22px;transition:.3s;}
+    .toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:var(--muted);border-radius:50%;transition:.3s;}
+    input:checked+.toggle-slider{background:var(--accent2);}
+    input:checked+.toggle-slider:before{transform:translateX(18px);background:#fff;}
+    .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+    .metric-card{background:var(--surface);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center;}
+    .metric-val{font-size:1.8rem;font-weight:700;color:var(--accent);}
+    .metric-label{font-size:.75rem;color:var(--muted);margin-top:4px;}
+    .img-preview{width:100%;max-height:180px;object-fit:contain;border-radius:8px;margin-top:8px;background:var(--bg);border:1px dashed var(--border);}
+    .img-preview[src=""]{display:none;}
+    .section-title{font-size:1.1rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+    .empty-state{text-align:center;padding:40px 20px;color:var(--muted);}
+    .save-row{display:flex;gap:10px;align-items:center;margin-top:20px;flex-wrap:wrap;}
+    .save-status{font-size:.8rem;color:var(--muted);}
+  </style>
+</head>
+<body>
+<div id="auth-screen">
+  <div class="auth-card">
+    <h1>✂️ El Caché 10</h1>
+    <p>Admin Panel — ingresa tu contraseña para continuar</p>
+    <input type="password" id="pwd-input" placeholder="Contraseña" autocomplete="current-password">
+    <button onclick="doLogin()">Entrar</button>
+    <div id="auth-error">Contraseña incorrecta. Intenta de nuevo.</div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:12px;">Contraseña por defecto: <code>cache10admin2026</code><br>Cámbiala en Configuración.</p>
+  </div>
+</div>
+
+<div id="admin-app">
+  <header>
+    <h1>✂️ El Caché 10 <span>Admin</span></h1>
+    <div class="header-actions">
+      <a href="https://www.elcache10.com" target="_blank" class="btn btn-ghost btn-sm">Ver sitio →</a>
+      <button class="logout-btn" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="dashboard">📊 Dashboard</div>
+    <div class="tab" data-tab="ofertas">🏷️ Ofertas</div>
+    <div class="tab" data-tab="servicios">💈 Precios</div>
+    <div class="tab" data-tab="aviso">📢 Aviso</div>
+    <div class="tab" data-tab="config">⚙️ Config</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="metrics">
+      <div class="metric-card"><div class="metric-val" id="m-ofertas">–</div><div class="metric-label">Ofertas activas</div></div>
+      <div class="metric-card"><div class="metric-val" id="m-servicios">–</div><div class="metric-label">Servicios publicados</div></div>
+      <div class="metric-card"><div class="metric-val" id="m-aviso">–</div><div class="metric-label">Aviso temporal</div></div>
+    </div>
+    <div class="card">
+      <h3>Accesos rápidos</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="switchTab('ofertas')">➕ Nueva oferta</button>
+        <button class="btn btn-ghost" onclick="switchTab('servicios')">💲 Editar precios</button>
+        <button class="btn btn-ghost" onclick="switchTab('aviso')">📢 Aviso temporal</button>
+        <a href="https://www.elcache10.com" target="_blank" class="btn btn-outline">🔗 Sitio público</a>
+        <a href="https://booksy.com/en-us/for-business" target="_blank" class="btn btn-outline">📅 Booksy Biz</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Estado del sistema</h3>
+      <p style="font-size:.875rem;color:var(--muted)"><span class="status-dot status-ok"></span>Sitio público — <a href="https://www.elcache10.com" target="_blank" style="color:var(--accent)">elcache10.com</a> ✅</p>
+      <p style="font-size:.875rem;color:var(--muted);margin-top:8px;" id="last-sync">Última sincronización: —</p>
+      <div style="margin-top:14px;"><button class="btn btn-ghost btn-sm" onclick="loadAllData()">🔄 Recargar datos de GitHub</button></div>
+    </div>
+  </div>
+
+  <!-- OFERTAS -->
+  <div class="panel" id="panel-ofertas">
+    <div class="section-title">Gestión de Ofertas</div>
+    <div class="card">
+      <h3>Nueva oferta</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Título *</label>
+          <input type="text" id="of-titulo" placeholder="Ej: Combo Fade + Manicure">
+        </div>
+        <div class="form-group">
+          <label>Precio (Ej: $35 — dejar vacío si es consultar)</label>
+          <input type="text" id="of-precio" placeholder="$35">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea id="of-desc" placeholder="Describe brevemente..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Imagen (URL pública)</label>
+          <input type="text" id="of-imagen" placeholder="https://..." oninput="previewOfferImg()">
+          <img class="img-preview" id="of-img-preview" src="" alt="">
+        </div>
+        <div class="form-group">
+          <label>Válida hasta (opcional)</label>
+          <input type="text" id="of-fecha" placeholder="2026-06-30">
+          <div style="margin-top:12px;display:flex;align-items:center;gap:10px;">
+            <span style="font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Activa</span>
+            <label class="toggle"><input type="checkbox" id="of-activa" checked><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+      <div class="save-row">
+        <button class="btn btn-success" onclick="addOferta()">➕ Agregar oferta</button>
+        <span class="save-status" id="of-status"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Ofertas publicadas</h3>
+      <div id="ofertas-list"><div class="empty-state"><p>Cargando...</p></div></div>
+      <div class="save-row">
+        <button class="btn btn-primary" onclick="saveOfertas()">💾 Guardar en GitHub</button>
+        <span class="save-status" id="save-of-status"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <div class="panel" id="panel-servicios">
+    <div class="section-title">Servicios &amp; Precios</div>
+    <div class="card">
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:16px;">Precios en USD. Internamente en centavos enteros (sin float). $25.00 = 2500¢</p>
+      <div style="overflow-x:auto;">
+        <table class="services-table">
+          <thead><tr><th>Categoría</th><th>Servicio</th><th>Precio USD</th><th>Etiqueta</th><th>Activo</th></tr></thead>
+          <tbody id="servicios-tbody"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="save-row">
+        <button class="btn btn-primary" onclick="saveServicios()">💾 Guardar precios en GitHub</button>
+        <span class="save-status" id="save-sv-status"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVISO -->
+  <div class="panel" id="panel-aviso">
+    <div class="section-title">Aviso Temporal — Banner en el sitio público</div>
+    <div class="card">
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px;">Activa un banner en la página pública sin deploy. Se guarda en <code>data/aviso.json</code>.</p>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <span style="font-size:.9rem;font-weight:700;">Aviso activo:</span>
+        <label class="toggle"><input type="checkbox" id="aviso-activo"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="form-group">
+        <label>Tipo</label>
+        <select id="aviso-tipo">
+          <option value="info">ℹ️ Información</option>
+          <option value="warning">⚠️ Advertencia</option>
+          <option value="success">✅ Buenas noticias</option>
+          <option value="danger">🔴 Urgente / Cierre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mensaje *</label>
+        <textarea id="aviso-msg" placeholder="Ej: Cerrados el 4 de julio. Reabrimos el 5 a las 10am." rows="3"></textarea>
+      </div>
+      <div class="save-row">
+        <button class="btn btn-primary" onclick="saveAviso()">💾 Publicar aviso en GitHub</button>
+        <span class="save-status" id="save-av-status"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="panel" id="panel-config">
+    <div class="section-title">Configuración</div>
+    <div class="card">
+      <h3>GitHub Token</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Token con permisos <code>repo</code> (Contents). Se guarda solo en este navegador (localStorage).</p>
+      <div class="form-group">
+        <label>GitHub Token (ghp_...)</label>
+        <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      </div>
+      <div class="form-group">
+        <label>Booksy Booking URL</label>
+        <input type="text" id="cfg-booksy" placeholder="https://booksy.com/en-us/...">
+      </div>
+      <div class="form-group">
+        <label>Vercel Deploy Hook URL (opcional — forzar deploy manual)</label>
+        <input type="text" id="cfg-hook" placeholder="https://api.vercel.com/v1/integrations/deploy/...">
+      </div>
+      <div class="save-row">
+        <button class="btn btn-primary" onclick="saveConfig()">💾 Guardar</button>
+        <button class="btn btn-ghost" onclick="testToken()">🔐 Probar token</button>
+        <button class="btn btn-ghost" onclick="triggerDeploy()">🚀 Forzar deploy</button>
+        <span class="save-status" id="save-cfg-status"></span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Info del repo</h3>
+      <p style="font-size:.875rem;color:var(--muted);">GitHub: <strong style="color:var(--text)">AminVentura/ELCache10</strong> | Branch: <strong style="color:var(--text)">main</strong></p>
+      <p style="font-size:.875rem;color:var(--muted);margin-top:6px;">Archivos: <code>data/ofertas.json</code>, <code>data/servicios.json</code>, <code>data/aviso.json</code></p>
+    </div>
+    <div class="card">
+      <h3>Cambiar contraseña del admin</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" id="new-pwd" placeholder="Mínimo 8 caracteres">
+        </div>
+        <div class="form-group">
+          <label>Confirmar contraseña</label>
+          <input type="password" id="new-pwd2" placeholder="Repite la contraseña">
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="changePwd()">🔑 Cambiar contraseña</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const GITHUB_OWNER='AminVentura',GITHUB_REPO='ELCache10',GITHUB_BRANCH='main';
+let state={token:'',booksy:'',hook:'',ofertas:[],servicios:[],aviso:{activo:false,tipo:'info',mensaje:''},shas:{}};
+
+async function sha256(m){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(m));return Array.from(new Uint8Array(b)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+
+async function doLogin(){
+  const pwd=document.getElementById('pwd-input').value;
+  const h=await sha256(pwd);
+  const stored=localStorage.getItem('ec10_pwd_hash');
+  if(stored?h===stored:pwd==='cache10admin2026'){
+    if(!stored)localStorage.setItem('ec10_pwd_hash',h);
+    localStorage.setItem('ec10_session','1');
+    showAdmin();
+  }else{document.getElementById('auth-error').style.display='block';}
+}
+document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){localStorage.removeItem('ec10_session');location.reload();}
+function showAdmin(){document.getElementById('auth-screen').style.display='none';document.getElementById('admin-app').style.display='block';loadConfig();loadAllData();}
+if(localStorage.getItem('ec10_session')==='1')showAdmin();
+
+function switchTab(n){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===n));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+n));}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+function loadConfig(){
+  state.token=localStorage.getItem('ec10_token')||'';
+  state.booksy=localStorage.getItem('ec10_booksy')||'https://elchache10.booksy.com';
+  state.hook=localStorage.getItem('ec10_hook')||'';
+  document.getElementById('cfg-token').value=state.token;
+  document.getElementById('cfg-booksy').value=state.booksy;
+  document.getElementById('cfg-hook').value=state.hook;
+}
+function saveConfig(){
+  state.token=document.getElementById('cfg-token').value.trim();
+  state.booksy=document.getElementById('cfg-booksy').value.trim();
+  state.hook=document.getElementById('cfg-hook').value.trim();
+  localStorage.setItem('ec10_token',state.token);
+  localStorage.setItem('ec10_booksy',state.booksy);
+  localStorage.setItem('ec10_hook',state.hook);
+  showStatus('save-cfg-status','✅ Guardado');toast('Configuración guardada','success');
+}
+async function testToken(){
+  if(!state.token){toast('Guarda el token primero','error');return;}
+  try{const r=await ghFetch('GET','');if(r.ok)toast('✅ Token válido','success');else toast('❌ Token inválido','error');}
+  catch(e){toast('Error de red','error');}
+}
+async function changePwd(){
+  const p1=document.getElementById('new-pwd').value,p2=document.getElementById('new-pwd2').value;
+  if(p1.length<8){toast('Mínimo 8 caracteres','error');return;}
+  if(p1!==p2){toast('Las contraseñas no coinciden','error');return;}
+  localStorage.setItem('ec10_pwd_hash',await sha256(p1));
+  toast('Contraseña cambiada','success');
+  document.getElementById('new-pwd').value='';document.getElementById('new-pwd2').value='';
+}
+
+async function ghFetch(method,path,body){
+  const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+  const opts={method,headers:{'Authorization':`token ${state.token}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'}};
+  if(body)opts.body=JSON.stringify(body);
+  return fetch(url,opts);
+}
+async function ghRead(path){
+  const r=await ghFetch('GET',path);
+  if(r.status===404)return{content:null,sha:null};
+  if(!r.ok)throw new Error(`GitHub ${r.status}`);
+  const d=await r.json();
+  return{content:JSON.parse(atob(d.content.replace(/\n/g,''))),sha:d.sha};
+}
+async function ghWrite(path,data,message,sha){
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+  const body={message,content,branch:GITHUB_BRANCH};
+  if(sha)body.sha=sha;
+  const r=await ghFetch('PUT',path,body);
+  if(!r.ok){const e=await r.json();throw new Error(e.message||`GitHub ${r.status}`);}
+  return(await r.json()).content.sha;
+}
+
+async function loadAllData(){
+  document.getElementById('last-sync').textContent='Última sincronización: cargando...';
+  try{
+    const[of,sv,av]=await Promise.all([
+      ghRead('data/ofertas.json').catch(()=>({content:null,sha:null})),
+      ghRead('data/servicios.json').catch(()=>({content:null,sha:null})),
+      ghRead('data/aviso.json').catch(()=>({content:null,sha:null}))
+    ]);
+    if(of.content){state.ofertas=of.content.ofertas||[];state.shas['ofertas']=of.sha;}
+    if(sv.content){state.servicios=sv.content.servicios||[];state.shas['servicios']=sv.sha;}
+    if(av.content){state.aviso=av.content;state.shas['aviso']=av.sha;}
+    renderOfertas();renderServicios();renderAviso();updateDashboard();
+    document.getElementById('last-sync').textContent='Última sincronización: '+new Date().toLocaleTimeString();
+  }catch(e){toast('Error cargando datos: '+e.message,'error');document.getElementById('last-sync').textContent='Error — revisa el token en Config';}
+}
+function updateDashboard(){
+  document.getElementById('m-ofertas').textContent=state.ofertas.filter(o=>o.activa).length;
+  document.getElementById('m-servicios').textContent=state.servicios.filter(s=>s.disponible).length;
+  document.getElementById('m-aviso').textContent=state.aviso?.activo?'🔴 ACTIVO':'⚪ OFF';
+}
+
+function previewOfferImg(){document.getElementById('of-img-preview').src=document.getElementById('of-imagen').value;}
+function renderOfertas(){
+  const el=document.getElementById('ofertas-list');
+  if(!state.ofertas.length){el.innerHTML='<div class="empty-state"><p>No hay ofertas. Agrega la primera arriba.</p></div>';return;}
+  el.innerHTML=state.ofertas.map((o,i)=>`<div class="offer-card">
+    ${o.imagen?`<img class="offer-img" src="${esc(o.imagen)}" alt="" onerror="this.style.display='none'">`:'<div class="offer-img" style="background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🏷️</div>'}
+    <div class="offer-info">
+      <h4>${esc(o.titulo)}</h4>
+      <p>${esc(o.descripcion||'')}</p>
+      ${o.precio?`<strong style="color:var(--accent)">${esc(o.precio)}</strong>`:''}
+      ${o.valida_hasta?`<span style="font-size:.75rem;color:var(--muted);margin-left:8px;">hasta ${esc(o.valida_hasta)}</span>`:''}
+      <div class="offer-actions" style="margin-top:8px;">
+        <label class="toggle"><input type="checkbox" ${o.activa?'checked':''} onchange="toggleOferta(${i})"><span class="toggle-slider"></span></label>
+        <span style="font-size:.8rem;color:var(--muted);margin:0 6px;">${o.activa?'Activa':'Inactiva'}</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteOferta(${i})">🗑️</button>
+      </div>
+    </div></div>`).join('');
+}
+function addOferta(){
+  const titulo=document.getElementById('of-titulo').value.trim();
+  if(!titulo){toast('El título es requerido','error');return;}
+  state.ofertas.unshift({id:'oferta-'+Date.now(),titulo,descripcion:document.getElementById('of-desc').value.trim(),precio:document.getElementById('of-precio').value.trim(),imagen:document.getElementById('of-imagen').value.trim(),valida_hasta:document.getElementById('of-fecha').value.trim(),activa:document.getElementById('of-activa').checked,created_at:new Date().toISOString()});
+  renderOfertas();
+  ['of-titulo','of-desc','of-precio','of-imagen','of-fecha'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('of-activa').checked=true;document.getElementById('of-img-preview').src='';
+  showStatus('of-status','✅ Agregada — guarda para publicar');
+}
+function toggleOferta(i){state.ofertas[i].activa=!state.ofertas[i].activa;renderOfertas();}
+function deleteOferta(i){if(!confirm('¿Borrar esta oferta?'))return;state.ofertas.splice(i,1);renderOfertas();updateDashboard();}
+async function saveOfertas(){
+  if(!state.token){toast('Configura el GitHub token primero','error');switchTab('config');return;}
+  showStatus('save-of-status','⏳ Guardando...');
+  try{state.shas['ofertas']=await ghWrite('data/ofertas.json',{version:1,updated_at:new Date().toISOString(),ofertas:state.ofertas},'Actualizar ofertas desde admin ElCache10',state.shas['ofertas']);
+    updateDashboard();showStatus('save-of-status','✅ Publicado');toast('Ofertas guardadas — deploy en ~30 seg','success');}
+  catch(e){showStatus('save-of-status','❌ '+e.message);toast('Error: '+e.message,'error');}
+}
+
+const CAT_BADGE={'Barber Services':'badge-barber','Nail Services':'badge-nails','Money Transfer':'badge-money'};
+function renderServicios(){
+  const tbody=document.getElementById('servicios-tbody');
+  if(!state.servicios.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;">Sin servicios</td></tr>';return;}
+  tbody.innerHTML=state.servicios.map((s,i)=>{
+    const p=s.precio_centavos!==null?(s.precio_centavos/100).toFixed(2):'';
+    return`<tr>
+      <td><span class="badge ${CAT_BADGE[s.categoria]||''}">${esc(s.categoria)}</span></td>
+      <td>${esc(s.nombre)}</td>
+      <td>${s.precio_centavos!==null?`<input type="number" min="0" step="0.01" value="${p}" onchange="updatePrecio(${i},this.value)" style="width:90px;"> <small style="color:var(--muted)">USD</small>`:'<span style="color:var(--muted);font-size:.8rem;">Ask for price</span>'}</td>
+      <td><input type="text" value="${esc(s.etiqueta||'')}" onchange="updateEtiqueta(${i},this.value)" placeholder="Oferta, Nuevo..." style="width:130px;"></td>
+      <td><label class="toggle"><input type="checkbox" ${s.disponible?'checked':''} onchange="toggleSv(${i})"><span class="toggle-slider"></span></label></td>
+    </tr>`;
+  }).join('');
+}
+function updatePrecio(i,v){const c=Math.round(parseFloat(v)*100);if(!isNaN(c))state.servicios[i].precio_centavos=c;}
+function updateEtiqueta(i,v){state.servicios[i].etiqueta=v;}
+function toggleSv(i){state.servicios[i].disponible=!state.servicios[i].disponible;}
+async function saveServicios(){
+  if(!state.token){toast('Configura el GitHub token primero','error');switchTab('config');return;}
+  showStatus('save-sv-status','⏳ Guardando...');
+  try{state.shas['servicios']=await ghWrite('data/servicios.json',{version:1,updated_at:new Date().toISOString(),servicios:state.servicios},'Actualizar servicios desde admin ElCache10',state.shas['servicios']);
+    showStatus('save-sv-status','✅ Publicado');toast('Precios guardados — deploy en ~30 seg','success');}
+  catch(e){showStatus('save-sv-status','❌ '+e.message);toast('Error: '+e.message,'error');}
+}
+
+function renderAviso(){document.getElementById('aviso-activo').checked=!!state.aviso?.activo;document.getElementById('aviso-tipo').value=state.aviso?.tipo||'info';document.getElementById('aviso-msg').value=state.aviso?.mensaje||'';}
+async function saveAviso(){
+  if(!state.token){toast('Configura el GitHub token primero','error');switchTab('config');return;}
+  showStatus('save-av-status','⏳ Guardando...');
+  const data={activo:document.getElementById('aviso-activo').checked,tipo:document.getElementById('aviso-tipo').value,mensaje:document.getElementById('aviso-msg').value.trim(),updated_at:new Date().toISOString()};
+  try{state.shas['aviso']=await ghWrite('data/aviso.json',data,'Actualizar aviso temporal desde admin ElCache10',state.shas['aviso']);
+    state.aviso=data;updateDashboard();showStatus('save-av-status','✅ Publicado');toast('Aviso guardado — aparece en ~30 seg','success');}
+  catch(e){showStatus('save-av-status','❌ '+e.message);toast('Error: '+e.message,'error');}
+}
+
+async function triggerDeploy(){
+  if(!state.hook){toast('Configura el Deploy Hook en Config','error');switchTab('config');return;}
+  try{const r=await fetch(state.hook,{method:'POST'});if(r.ok)toast('🚀 Deploy disparado','success');else toast('Error disparando deploy','error');}
+  catch(e){toast('Error de red','error');}
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showStatus(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;setTimeout(()=>el.textContent='',6000);}}
+let toastTimer;
+function toast(msg,type='success'){const el=document.getElementById('toast');el.textContent=msg;el.className=`show ${type}`;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.className='',4000);}
+</script>
+</body>
+</html>

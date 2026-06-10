@@ -1,7 +1,7 @@
 /* El Caché 10 Barbershop - Optimized */
 
-/** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / “Copy link”). */
-const BOOKSY_BOOKING_URL = '';
+/** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / "Copy link"). */
+const BOOKSY_BOOKING_URL = 'https://elchache10.booksy.com';
 
 let lightboxTrigger = null;
 
@@ -350,14 +350,6 @@ function initReveal() {
   els.forEach(el => observer.observe(el));
 }
 
-/**
- * Mobile-first collapsibles: sections marked .collapsible-section show a
- * preview teaser on mobile (max-height + fade mask) and reveal the rest
- * when the user clicks the toggle. Desktop always shows full content.
- *
- * Inspired by prediccionloteria.com — modernized with smooth height
- * animation, glassmorphism toggle, animated chevron and ARIA states.
- */
 function initCollapsibles() {
   const sections = document.querySelectorAll('.collapsible-section');
   if (!sections.length) return;
@@ -407,10 +399,6 @@ function initCollapsibles() {
   });
 }
 
-/**
- * Floating "back to top" button that appears after the user scrolls
- * past the first viewport. Hidden by CSS until .is-visible.
- */
 function initBackToTop() {
   const btn = document.getElementById('backToTop');
   if (!btn) return;
@@ -429,10 +417,6 @@ function initBackToTop() {
   onScroll();
 }
 
-/**
- * Slim scroll-progress bar at the very top of the viewport.
- * Pure visual flourish — disabled if user prefers reduced motion.
- */
 function initScrollProgress() {
   const bar = document.getElementById('scrollProgress');
   if (!bar) return;

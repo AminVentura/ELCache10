@@ -14,6 +14,12 @@
     <meta name="ICBM" content="40.8519, -73.9094">
     <meta name="robots" content="index, follow">
     <meta name="google-adsense-account" content="ca-pub-8721021745606812">
+    <!-- Google Search Console / AdSense ownership: paste the exact verification meta tag from Google here when available. Do not use a placeholder token. -->
+    <script>
+    if (window.location.hostname === 'admin.elcache10.com' && window.location.pathname === '/') {
+        window.location.replace('/admin');
+    }
+    </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8721021745606812" crossorigin="anonymous"></script>
     <link rel="canonical" href="https://elcache10.com/">
     <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
@@ -158,12 +164,14 @@
                 <ul class="nav-links">
                     <li><a href="#home">Home</a></li>
                     <li><a href="#services">Services</a></li>
+                    <li><a href="#offers">Offers</a></li>
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#haircut-guide">Guide</a></li>
                     <li><a href="#reviews">Reviews</a></li>
                     <li><a href="#faq">FAQ</a></li>
                     <li><a href="#booking">Book</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
                     <li><a href="tel:6463349409" class="btn btn-primary">Call (646) 334-9409</a></li>
                 </ul>
             </div>
@@ -223,6 +231,18 @@
             </div>
         </div>
 
+        <!-- Active Offers -->
+        <section id="offers" class="offers section" hidden>
+            <div class="container">
+                <div class="section-heading-row">
+                    <img src="images/barber-pole-icon.png" alt="" class="heading-icon" width="44" height="44" loading="lazy" decoding="async" aria-hidden="true">
+                    <h2 class="reveal">Ofertas de El Caché 10</h2>
+                </div>
+                <p class="section-subtitle reveal">Especiales vigentes de la barbería. Las ofertas pueden cambiar sin aviso; confirma por WhatsApp antes de llegar.</p>
+                <div id="offers-grid" class="offers-grid"></div>
+            </div>
+        </section>
+
         <!-- About / Intro -->
         <section class="intro section">
             <div class="container">
@@ -247,7 +267,7 @@
                         </div>
                         <h3 class="service-category-title">Barber Services</h3>
                         <p class="service-category-desc">Precision cuts and traditional grooming. Our barbers bring authentic Dominican craft to every style.</p>
-                        <ul class="service-price-list">
+                        <ul class="service-price-list" data-service-list="barber">
                             <li><span>Dominican Style Haircuts</span><span class="spl-price">$20</span></li>
                             <li><span>Fade</span><span class="spl-price">$25</span></li>
                             <li><span>Caesar Cut</span><span class="spl-price">$20</span></li>
@@ -272,7 +292,7 @@
                             <li>Pedicure</li>
                             <li>Acrylic</li>
                         </ul>
-                        <ul class="service-price-list">
+                        <ul class="service-price-list" data-service-list="nails">
                             <li><span>Manicure</span><span class="spl-price">$30</span></li>
                             <li><span>Pedicure</span><span class="spl-price">$45</span></li>
                             <li><span>Acrylic Nails</span><span class="spl-price">$45</span></li>
@@ -288,7 +308,7 @@
                         </div>
                         <h3 class="service-category-title">Money Transfer</h3>
                         <p class="service-category-desc">Authorized La Nacional agent. Send money safely and conveniently—no extra trip needed.</p>
-                        <ul class="service-price-list">
+                        <ul class="service-price-list" data-service-list="money">
                             <li><span>La Nacional Money Transfers</span><span class="spl-price spl-ask">Ask for price</span></li>
                             <li><span>Domestic &amp; International</span><span class="spl-price"></span></li>
                         </ul>
@@ -513,18 +533,6 @@
                     </a>
                     <a href="images/Screenshot%202026-04-02%20181840.png" class="gallery-item gallery-item-contain" data-caption="Sillas de alquiler — (646) 334-9409" data-lightbox>
                         <img src="images/Screenshot%202026-04-02%20181840.png" alt="Sillas de alquiler disponibles en El Cache Barbershop Bronx — peluquero, saloneras, trenzas (646) 334-9409" loading="lazy" decoding="async" width="400" height="200">
-                        <span class="gallery-overlay"><span class="gallery-icon"></span></span>
-                    </a>
-                    <a href="images/Screenshot%202026-04-02%20204723.png" class="gallery-item gallery-item-contain" data-caption="Notary Public — El Caché 10" data-lightbox>
-                        <img src="images/Screenshot%202026-04-02%20204723.png" alt="Notary Public en El Caché 10 Barbershop Bronx NY" loading="lazy" decoding="async" width="400" height="300">
-                        <span class="gallery-overlay"><span class="gallery-icon"></span></span>
-                    </a>
-                    <a href="images/Screenshot%202026-04-02%20204824.png" class="gallery-item gallery-item-contain" data-caption="ATM en el local — El Caché 10" data-lightbox>
-                        <img src="images/Screenshot%202026-04-02%20204824.png" alt="ATM disponible en El Caché 10 Barbershop Bronx NY" loading="lazy" decoding="async" width="400" height="300">
-                        <span class="gallery-overlay"><span class="gallery-icon"></span></span>
-                    </a>
-                    <a href="images/Screenshot%202026-04-02%20210602.png" class="gallery-item gallery-item-contain" data-caption="Tax Preparation — UB Tax (718) 690-5112" data-lightbox>
-                        <img src="images/Screenshot%202026-04-02%20210602.png" alt="Tax preparation UB Tax Time en El Caché 10 Bronx NY — (718) 690-5112" loading="lazy" decoding="async" width="400" height="300">
                         <span class="gallery-overlay"><span class="gallery-icon"></span></span>
                     </a>
                     <a href="images/Screenshot%202026-04-02%20204935.png" class="gallery-item gallery-item-tall" data-caption="El Caché 10 — Reglamento" data-lightbox>
@@ -1045,10 +1053,13 @@
                             <label for="booking-staff">Preferred barber / staff</label>
                             <select id="booking-staff" name="staff">
                                 <option value="">Any available</option>
-                                <option value="Barber 1">Barber 1</option>
-                                <option value="Barber 2">Barber 2</option>
-                                <option value="Barber 3">Barber 3</option>
-                                <option value="Nail technician">Nail technician (manicure/pedicure)</option>
+                                <option value="Francis">Francis (Owner)</option>
+                                <option value="Alex Ortega">Alex Ortega</option>
+                                <option value="Jariel Pimentel">Jariel Pimentel</option>
+                                <option value="Cristian Moca">Cristian Moca</option>
+                                <option value="La Melmelada">La Melmelada</option>
+                                <option value="Claribel Estevez">Claribel Estevez (Blow Dry)</option>
+                                <option value="Perla Madera">Perla Madera (Nails)</option>
                             </select>
                         </div>
                         <div class="booking-field">
@@ -1805,7 +1816,7 @@
                     <span aria-hidden="true">|</span>
                     <a href="cookies.html">Política de Cookies</a>
                 </nav>
-                <p class="footer-update">Última actualización: 15/02/2026</p>
+                <p class="footer-update">Última actualización: 10/06/2026</p>
                 <a href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener noreferrer" class="footer-instagram" aria-label="Follow @elcache10 on Instagram">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="instagram-icon" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     @elcache10
