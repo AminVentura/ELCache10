@@ -479,3 +479,54 @@ th {
     width: 100%;
   }
 }
+
+/* ── Photo upload button (offer form) ── */
+.upload-field {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.upload-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1.4rem;
+  color: var(--deep);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fffbee, #fff8d6);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  width: fit-content;
+}
+
+.upload-btn:hover {
+  background: linear-gradient(135deg, #fff3b0, #ffe87a);
+  transform: translateY(-1px);
+}
+
+.image-preview-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90px;
+  padding: 1rem;
+  color: var(--muted);
+  border: 1.5px dashed var(--line);
+  border-radius: 12px;
+  background: #faf9f4;
+  font-size: 0.875rem;
+  text-align: center;
+}

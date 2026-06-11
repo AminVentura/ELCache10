@@ -1,7 +1,7 @@
 /* El Caché 10 Barbershop - Optimized */
 
-/** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / “Copy link”). */
-const BOOKSY_BOOKING_URL = '';
+/** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / "Copy link"). */
+const BOOKSY_BOOKING_URL = 'https://elchache10.booksy.com';
 
 let lightboxTrigger = null;
 
@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCollapsibles();
   initBackToTop();
   initScrollProgress();
-  initDynamicOffersAndPrices();
 });
 
 /** When the site opens inside Google Translate (iframe), offset fixed header so it sits below their toolbar. */
@@ -351,14 +350,6 @@ function initReveal() {
   els.forEach(el => observer.observe(el));
 }
 
-/**
- * Mobile-first collapsibles: sections marked .collapsible-section show a
- * preview teaser on mobile (max-height + fade mask) and reveal the rest
- * when the user clicks the toggle. Desktop always shows full content.
- *
- * Inspired by prediccionloteria.com — modernized with smooth height
- * animation, glassmorphism toggle, animated chevron and ARIA states.
- */
 function initCollapsibles() {
   const sections = document.querySelectorAll('.collapsible-section');
   if (!sections.length) return;
@@ -408,10 +399,6 @@ function initCollapsibles() {
   });
 }
 
-/**
- * Floating "back to top" button that appears after the user scrolls
- * past the first viewport. Hidden by CSS until .is-visible.
- */
 function initBackToTop() {
   const btn = document.getElementById('backToTop');
   if (!btn) return;
@@ -430,10 +417,6 @@ function initBackToTop() {
   onScroll();
 }
 
-/**
- * Slim scroll-progress bar at the very top of the viewport.
- * Pure visual flourish — disabled if user prefers reduced motion.
- */
 function initScrollProgress() {
   const bar = document.getElementById('scrollProgress');
   if (!bar) return;
@@ -449,120 +432,4 @@ function initScrollProgress() {
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update, { passive: true });
   update();
-}
-
-async function initDynamicOffersAndPrices() {
-  const [offersData, servicesData] = await Promise.all([
-    loadPublicJson('/data/ofertas.json'),
-    loadPublicJson('/data/servicios.json'),
-  ]);
-  if (servicesData) renderServicePrices(servicesData);
-  if (offersData) renderOffers(offersData);
-}
-
-async function loadPublicJson(path) {
-  const rawUrl = `https://raw.githubusercontent.com/AminVentura/ELCache10/main${path}`;
-  try {
-    const response = await fetch(`${rawUrl}?v=${Date.now()}`, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`${rawUrl} ${response.status}`);
-    return await response.json();
-  } catch (rawError) {
-    console.warn('[ElCache10] GitHub raw no disponible, usando fallback local:', rawError.message);
-  }
-
-  try {
-    const response = await fetch(`${path}?v=${Date.now()}`, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`${path} ${response.status}`);
-    return await response.json();
-  } catch (error) {
-    console.warn('[ElCache10] No se pudo cargar JSON dinámico:', error.message);
-    return null;
-  }
-}
-
-function formatCents(value, fallback = '') {
-  if (value === null || value === undefined || value === '') return fallback;
-  const cents = Number(value);
-  if (!Number.isInteger(cents)) return fallback;
-  const dollars = Math.trunc(cents / 100);
-  const remainder = Math.abs(cents % 100);
-  return remainder === 0 ? `$${dollars}` : `$${dollars}.${String(remainder).padStart(2, '0')}`;
-}
-
-function parseRdDate(value, endOfDay = false) {
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value || '');
-  if (!match) return null;
-  const day = Number(match[1]);
-  const month = Number(match[2]);
-  const year = Number(match[3]);
-  return new Date(year, month - 1, day, endOfDay ? 23 : 0, endOfDay ? 59 : 0, endOfDay ? 59 : 0);
-}
-
-function renderServicePrices(data) {
-  if (!Array.isArray(data?.servicios)) return;
-  const targets = {
-    'Barber Services': document.querySelector('[data-service-list="barber"]'),
-    'Nail Services': document.querySelector('[data-service-list="nails"]'),
-    'Money Transfer': document.querySelector('[data-service-list="money"]'),
-  };
-
-  Object.entries(targets).forEach(([category, list]) => {
-    if (!list) return;
-    const services = data.servicios
-      .filter((service) => service.categoria === category && service.disponible)
-      .sort((a, b) => (a.orden || 0) - (b.orden || 0));
-    if (!services.length) return;
-    list.innerHTML = services
-      .map((service) => {
-        const price = service.etiqueta || formatCents(service.precio_centavos, '');
-        const priceClass = price && !price.startsWith('$') ? 'spl-price spl-ask' : 'spl-price';
-        return `<li><span>${escapePublicHtml(service.nombre)}</span><span class="${priceClass}">${escapePublicHtml(price)}</span></li>`;
-      })
-      .join('');
-  });
-}
-
-function renderOffers(data) {
-  const section = document.getElementById('offers');
-  const grid = document.getElementById('offers-grid');
-  if (!section || !grid || !Array.isArray(data?.ofertas)) return;
-  const now = new Date();
-  const activeOffers = data.ofertas
-    .filter((offer) => {
-      if (!offer.publicada) return false;
-      const start = parseRdDate(offer.fecha_inicio);
-      const end = parseRdDate(offer.fecha_fin, true);
-      return start && end && now >= start && now <= end;
-    })
-    .sort((a, b) => (a.orden || 0) - (b.orden || 0));
-
-  if (!activeOffers.length) {
-    section.hidden = true;
-    return;
-  }
-
-  section.hidden = false;
-  grid.innerHTML = activeOffers
-    .map((offer) => {
-      const image = offer.imagen_base64 || 'images/logo.jpg';
-      const message = encodeURIComponent(`Hi El Caché 10! I want this offer: ${offer.titulo}`);
-      return `
-        <article class="offer-card reveal is-visible">
-          <div class="offer-media">
-            <img src="${image}" alt="${escapePublicHtml(offer.titulo)}" loading="lazy" decoding="async">
-          </div>
-          <div class="offer-body">
-            <p class="offer-badge">Oferta activa</p>
-            <h3>${escapePublicHtml(offer.titulo)}</h3>
-            <p>${escapePublicHtml(offer.descripcion)}</p>
-            <p class="offer-date">Disponible hasta ${escapePublicHtml(offer.fecha_fin)}</p>
-            <a class="btn btn-primary" href="https://wa.me/16463349409?text=${message}" target="_blank" rel="noopener noreferrer">Pedir por WhatsApp</a>
-          </div>
-        </article>`;
-    })
-    .join('');
-}
-
-function escapePublicHtml(value) {
-  return String(value || '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 }
