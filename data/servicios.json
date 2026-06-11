@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-06-11T22:35:54.539Z",
+  "updated_at": "2026-06-11T22:39:53.543Z",
   "servicios": [
     {
       "id": "barber-dominican-style",
@@ -18,8 +18,7 @@
       "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
-      "orden": 2,
-      "precio_max_centavos": null
+      "orden": 2
     },
     {
       "id": "barber-caesar",
