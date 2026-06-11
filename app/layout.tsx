@@ -14,7 +14,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        {hasValidClerkKey ? <ClerkProvider>{children}</ClerkProvider> : children}
+        {hasValidClerkKey ? (
+          <ClerkProvider signInUrl="/sign-in" signInFallbackRedirectUrl="/admin">
+            {children}
+          </ClerkProvider>
+        ) : children}
       </body>
     </html>
   );
