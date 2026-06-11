@@ -301,8 +301,11 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
     setStatus('WhatsApp abierto para esta oferta.');
   }
 
-  function publishOffer(offer: Offer) {
-    void copyCaption(offer);
+  async function publishOffer(offer: Offer) {
+    // 1. Copiar caption al portapapeles PRIMERO (antes de abrir la pestaña)
+    await copyCaption(offer);
+
+    // 2. Descargar imagen WebP comprimida si existe
     if (offer.imagen_base64) {
       const link = document.createElement('a');
       link.href = offer.imagen_base64;
@@ -311,7 +314,10 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
       link.click();
       document.body.removeChild(link);
     }
+
+    // 3. Abrir Instagram en nueva pestaña para publicación manual
     window.open('https://www.instagram.com/elcache10/', '_blank', 'noopener,noreferrer');
+    setStatus('Caption copiado, imagen descargada. Pega en Instagram y publica.');
   }
 
   function updateService(id: string, patch: Partial<ServiceItem>) {
