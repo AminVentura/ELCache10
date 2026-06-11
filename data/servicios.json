@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-06-09T02:33:29.516Z",
+  "updated_at": "2026-06-11T22:29:08.564Z",
   "servicios": [
     {
       "id": "barber-dominican-style",
@@ -15,7 +15,7 @@
       "id": "barber-fade",
       "categoria": "Barber Services",
       "nombre": "Fade",
-      "precio_centavos": 2500,
+      "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
       "orden": 2
