@@ -1,9 +1,15 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
+import { buildAdminRedirectUrl } from './lib/admin-host.mjs';
 
-const isProtectedRoute = createRouteMatcher(['/admin', '/admin/(.*)']);
+const isProtectedRoute = createRouteMatcher(['/admin', '/admin/(.*)', '/api/admin', '/api/admin/(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
+  const adminRedirectUrl = buildAdminRedirectUrl(req.url);
+  if (adminRedirectUrl) {
+    return NextResponse.redirect(adminRedirectUrl);
+  }
+
   if (isProtectedRoute(req)) {
     const { userId } = await auth();
     if (!userId) {

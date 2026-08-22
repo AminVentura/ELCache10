@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Script from 'next/script';
 import type { Metadata } from 'next';
-import { injectPublicOffersHtml, renderPublicOffersHtml } from '../lib/static-data.mjs';
+import { injectPublicOffersHtml, injectPublicServicesHtml, renderPublicOffersHtml } from '../lib/static-data.mjs';
 
 const ADSENSE_ACCOUNT = 'ca-pub-8721021745606812';
 
@@ -30,8 +30,8 @@ function extractJsonLd(html: string) {
   return match?.[1]?.trim() || '';
 }
 
-async function readLiveOffers() {
-  const rawUrl = 'https://raw.githubusercontent.com/AminVentura/ELCache10/main/data/ofertas.json';
+async function readLiveJson(filename: string) {
+  const rawUrl = `https://raw.githubusercontent.com/AminVentura/ELCache10/main/data/${filename}`;
   try {
     const response = await fetch(`${rawUrl}?v=${Date.now()}`, { cache: 'no-store' });
     if (response.ok) return response.json();
@@ -39,7 +39,7 @@ async function readLiveOffers() {
     // Fallback below keeps the public page visible if GitHub raw is temporarily unavailable.
   }
 
-  const fallback = await fs.readFile(path.join(process.cwd(), 'data', 'ofertas.json'), 'utf8');
+  const fallback = await fs.readFile(path.join(process.cwd(), 'data', filename), 'utf8');
   return JSON.parse(fallback);
 }
 
@@ -51,9 +51,12 @@ export default async function Page() {
   }
 
   const html = await fs.readFile(path.join(process.cwd(), 'index.html'), 'utf8');
-  const offersDoc = await readLiveOffers();
+  const [offersDoc, servicesDoc] = await Promise.all([
+    readLiveJson('ofertas.json'),
+    readLiveJson('servicios.json'),
+  ]);
   const offersHtml = renderPublicOffersHtml(offersDoc);
-  const body = injectPublicOffersHtml(extractBody(html), offersHtml);
+  const body = injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc);
   const jsonLd = extractJsonLd(html);
 
   return (

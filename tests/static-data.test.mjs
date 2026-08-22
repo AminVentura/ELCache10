@@ -7,9 +7,11 @@ import {
   formatPriceFromCents,
   getActiveOffers,
   injectPublicOffersHtml,
+  injectPublicServicesHtml,
   normalizeServiceCatalog,
   parseUsdInputToCents,
   renderPublicOffersHtml,
+  renderPublicServiceListHtml,
   validateOfferPayload,
   validateServicePayload,
 } from '../lib/static-data.mjs';
@@ -113,6 +115,66 @@ test('renderPublicOffersHtml and injectPublicOffersHtml expose active offers in 
   assert.match(rendered, /Pedir por WhatsApp/);
   assert.doesNotMatch(injected, /<section id="offers" class="offers section" hidden>/);
   assert.match(injected, /<div id="offers-grid" class="offers-grid">[\s\S]*Oferta de Verano/);
+});
+
+test('renderPublicOffersHtml avoids duplicate active offers with same campaign details', () => {
+  const offers = {
+    version: 1,
+    updated_at: '2026-06-11T00:00:00.000Z',
+    ofertas: [
+      {
+        id: 'typo',
+        titulo: 'Fade de la Demana',
+        descripcion: 'Especial de Fade con Barba + toalla caliente',
+        imagen_base64: 'data:image/png;base64,one',
+        fecha_inicio: '11/06/2026',
+        fecha_fin: '30/06/2026',
+        publicada: true,
+        orden: 1,
+      },
+      {
+        id: 'correct',
+        titulo: 'Fade de la Semana',
+        descripcion: 'Oferta de Fade y la Barba con Toalla caliente a $35',
+        imagen_base64: 'data:image/png;base64,two',
+        fecha_inicio: '11/06/2026',
+        fecha_fin: '18/06/2026',
+        publicada: true,
+        orden: 2,
+      },
+    ],
+  };
+  const rendered = renderPublicOffersHtml(offers, new Date('2026-06-12T12:00:00-04:00'));
+
+  assert.equal((rendered.match(/offer-card/g) || []).length, 1);
+  assert.match(rendered, /Fade de la Semana/);
+  assert.doesNotMatch(rendered, /Fade de la Demana/);
+});
+
+test('injectPublicServicesHtml replaces public prices from servicios payload', () => {
+  const services = {
+    version: 1,
+    updated_at: '2026-06-11T00:00:00.000Z',
+    servicios: [
+      { id: 'cut', categoria: 'Barber Services', nombre: 'Dominican Style Haircuts', precio_centavos: 2000, disponible: true, orden: 1 },
+      { id: 'fade', categoria: 'Barber Services', nombre: 'Fade', precio_centavos: 3500, disponible: true, orden: 2 },
+      { id: 'money', categoria: 'Money Transfer', nombre: 'La Nacional Money Transfers', precio_centavos: null, etiqueta: 'Ask for price', disponible: true, orden: 1 },
+    ],
+  };
+  const html = `
+    <ul class="service-price-list" data-service-list="barber">
+      <li><span>Fade</span><span class="spl-price">$25</span></li>
+    </ul>
+    <ul class="service-price-list" data-service-list="money">
+      <li><span>Old</span><span class="spl-price"></span></li>
+    </ul>`;
+  const injected = injectPublicServicesHtml(html, services);
+
+  assert.match(renderPublicServiceListHtml(services, 'Barber Services'), /Fade<\/span><span class="spl-price">\$35/);
+  assert.match(injected, /Dominican Style Haircuts<\/span><span class="spl-price">\$20/);
+  assert.match(injected, /Fade<\/span><span class="spl-price">\$35/);
+  assert.doesNotMatch(injected, /\$25/);
+  assert.match(injected, /La Nacional Money Transfers<\/span><span class="spl-price">Ask for price/);
 });
 
 test('getActiveOffers filters unpublished and expired offers using RD dates', () => {

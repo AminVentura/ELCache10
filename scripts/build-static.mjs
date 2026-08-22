@@ -12,6 +12,7 @@ const STATIC_ENTRIES = [
   'js',
   'videos',
   'watch',
+  'guias',
   'ads.txt',
   'aviso-legal.html',
   'cookies.html',

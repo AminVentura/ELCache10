@@ -1,4 +1,5 @@
 import { assertAdminRequest } from '../admin-request';
+import { decodeGithubJsonContent, getStaleJsonConflict } from '../../../../lib/admin-save-guard.mjs';
 
 export const runtime = 'nodejs';
 
@@ -79,12 +80,6 @@ export async function POST(request: Request) {
     if (!kind || !filePath) return Response.json({ error: 'Tipo de archivo no permitido.' }, { status: 400 });
     if (!body.payload) return Response.json({ error: 'Payload requerido.' }, { status: 400 });
 
-    const payload = {
-      ...body.payload,
-      updated_at: new Date().toISOString(),
-    };
-    assertSafePayload(kind, payload);
-
     const repo = process.env.ADMIN_GITHUB_REPO || 'AminVentura/ELCache10';
     const branch = process.env.ADMIN_GITHUB_BRANCH || 'main';
     const apiBase = `https://api.github.com/repos/${repo}/contents/${filePath}`;
@@ -92,6 +87,18 @@ export async function POST(request: Request) {
     if (!existing.response.ok && existing.response.status !== 404) {
       return Response.json({ error: `GitHub no pudo leer ${filePath}.` }, { status: existing.response.status });
     }
+
+    const currentDoc = existing.response.ok ? decodeGithubJsonContent(existing.data) : null;
+    const staleConflict = getStaleJsonConflict(body.payload, currentDoc);
+    if (staleConflict) {
+      return Response.json(staleConflict, { status: staleConflict.status });
+    }
+
+    const payload = {
+      ...body.payload,
+      updated_at: new Date().toISOString(),
+    };
+    assertSafePayload(kind, payload);
 
     const content = Buffer.from(`${JSON.stringify(payload, null, 2)}\n`, 'utf8').toString('base64');
     const update = await githubJson('PUT', apiBase, token, {

@@ -1,14 +1,57 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import AdminDashboard from './AdminDashboard';
 import type { JsonDoc, Offer, ServiceItem } from './AdminDashboard';
+import { buildAdminRedirectUrl } from '../../lib/admin-host.mjs';
 
 async function readDataJson<T>(filename: string): Promise<T> {
+  const rawUrl = `https://raw.githubusercontent.com/AminVentura/ELCache10/main/data/${filename}`;
+  try {
+    const response = await fetch(`${rawUrl}?v=${Date.now()}`, { cache: 'no-store' });
+    if (response.ok) return (await response.json()) as T;
+  } catch {
+    // Local fallback keeps the admin usable if GitHub raw is temporarily unavailable.
+  }
+
   const raw = await fs.readFile(path.join(process.cwd(), 'data', filename), 'utf8');
   return JSON.parse(raw) as T;
 }
 
+function formatBronxDate(daysToAdd = 0) {
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() + daysToAdd);
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).formatToParts(date);
+  const day = parts.find((part) => part.type === 'day')?.value || '01';
+  const month = parts.find((part) => part.type === 'month')?.value || '01';
+  const year = parts.find((part) => part.type === 'year')?.value || String(date.getUTCFullYear());
+  return `${day}/${month}/${year}`;
+}
+
+function buildInitialOfferForm() {
+  return {
+    titulo: '',
+    descripcion: '',
+    fecha_inicio: formatBronxDate(),
+    fecha_fin: formatBronxDate(7),
+  };
+}
+
 export default async function AdminPage() {
+  const headersList = await headers();
+  const host = headersList.get('host') || '';
+  const protocol = headersList.get('x-forwarded-proto') || 'https';
+  const adminRedirectUrl = buildAdminRedirectUrl(`${protocol}://${host}/admin`);
+  if (adminRedirectUrl) {
+    redirect(String(adminRedirectUrl));
+  }
+
   const [offersDoc, servicesDoc] = await Promise.all([
     readDataJson<JsonDoc<{ ofertas: Offer[] }>>('ofertas.json'),
     readDataJson<JsonDoc<{ servicios: ServiceItem[] }>>('servicios.json'),
@@ -32,7 +75,7 @@ export default async function AdminPage() {
             <a className="ghost-link" href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener">Instagram</a>
           </div>
         </header>
-        <AdminDashboard offersDoc={offersDoc} servicesDoc={servicesDoc} />
+        <AdminDashboard offersDoc={offersDoc} servicesDoc={servicesDoc} initialOfferForm={buildInitialOfferForm()} />
       </main>
     </>
   );

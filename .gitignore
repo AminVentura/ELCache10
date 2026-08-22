@@ -3,3 +3,7 @@
 .aider*
 desktop.ini
 .claude/
+node_modules/
+.next/
+tsconfig.tsbuildinfo
+AMIN_VENTURA_PROFILE.md

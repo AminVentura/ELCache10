@@ -33,6 +33,14 @@ export type JsonDoc<T> = {
 type Props = {
   offersDoc: JsonDoc<{ ofertas: Offer[] }>;
   servicesDoc: JsonDoc<{ servicios: ServiceItem[] }>;
+  initialOfferForm: OfferForm;
+};
+
+type OfferForm = {
+  titulo: string;
+  descripcion: string;
+  fecha_inicio: string;
+  fecha_fin: string;
 };
 
 type WorkflowStatus = {
@@ -45,19 +53,6 @@ type WorkflowStatus = {
   deployHook: string;
   files: string[];
 };
-
-const blankOffer = {
-  titulo: '',
-  descripcion: '',
-  fecha_inicio: todayRd(),
-  fecha_fin: todayRd(7),
-};
-
-function todayRd(daysToAdd = 0) {
-  const date = new Date();
-  date.setDate(date.getDate() + daysToAdd);
-  return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-}
 
 function slugify(value: string) {
   return value
@@ -181,13 +176,14 @@ function MoneyInput({
   );
 }
 
-export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
+export default function AdminDashboard({ offersDoc, servicesDoc, initialOfferForm }: Props) {
   const [offers, setOffers] = useState(offersDoc.ofertas);
   const [services, setServices] = useState(servicesDoc.servicios);
-  const [offerForm, setOfferForm] = useState(blankOffer);
+  const [offerForm, setOfferForm] = useState(initialOfferForm);
   const [offerImage, setOfferImage] = useState('');
   const [status, setStatus] = useState('');
   const [workflowStatus, setWorkflowStatus] = useState<WorkflowStatus | null>(null);
+  const [isBusy, setIsBusy] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -223,18 +219,27 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
     const response = await fetch('/api/admin/save-json', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
+      credentials: 'same-origin',
       body: JSON.stringify({ kind, payload }),
     });
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error(response.redirected ? 'La sesion expiro. Vuelve a entrar al admin e intenta de nuevo.' : 'El servidor no devolvio JSON. Revisa la sesion del admin.');
+    }
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'No se pudo guardar.');
     setStatus(`${kind} guardado. www.elcache10.com leera este JSON vivo desde GitHub.`);
   }
 
   async function run(action: () => Promise<void>) {
+    if (isBusy) return;
+    setIsBusy(true);
     try {
       await action();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : 'Error inesperado.');
+    } finally {
+      setIsBusy(false);
     }
   }
 
@@ -259,13 +264,20 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
     const nextOffers = [...offers, nextOffer];
     await saveJson('ofertas', { ...offersDoc, ofertas: nextOffers });
     setOffers(nextOffers);
-    setOfferForm(blankOffer);
+    setOfferForm(initialOfferForm);
     setOfferImage('');
   }
 
   async function saveOffers(nextOffers = offers) {
     await saveJson('ofertas', { ...offersDoc, ofertas: nextOffers });
     setOffers(nextOffers);
+  }
+
+  async function deleteOffer(offer: Offer) {
+    const confirmed = window.confirm(`Eliminar la oferta "${offer.titulo}" de www.elcache10.com?`);
+    if (!confirmed) return;
+    await saveOffers(offers.filter((entry) => entry.id !== offer.id));
+    setStatus(`Oferta "${offer.titulo}" eliminada de GitHub. La web leera el JSON actualizado.`);
   }
 
   async function saveServices() {
@@ -317,7 +329,7 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
 
     // 3. Abrir Instagram en nueva pestaña para publicación manual
     window.open('https://www.instagram.com/elcache10/', '_blank', 'noopener,noreferrer');
-    setStatus('Caption copiado, imagen descargada. Pega en Instagram y publica.');
+    setStatus('Caption copiado e imagen descargada. Sube la foto manualmente en Instagram @elcache10.');
   }
 
   function updateService(id: string, patch: Partial<ServiceItem>) {
@@ -372,7 +384,7 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
         <a className="quick-action" href="https://elcache10.com/" target="_blank" rel="noopener">Pagina publica</a>
         <a className="quick-action" href="https://elcache10.com/#services" target="_blank" rel="noopener">Servicios y precios</a>
         <a className="quick-action" href="https://wa.me/16463349409" target="_blank" rel="noopener">WhatsApp reservas</a>
-        <a className="quick-action" href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener">Instagram</a>
+        <a className="quick-action" href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener">Instagram @elcache10</a>
       </section>
 
       <section className="panel workflow-panel">
@@ -382,8 +394,8 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
             <h2>Salud del guardado automatico</h2>
           </div>
           <div className="button-row">
-            <button className="primary-btn" type="button" onClick={() => run(deploySite)}>Actualizar web</button>
-            <button className="secondary-btn" type="button" onClick={() => window.location.reload()}>Refrescar estado</button>
+            <button className="primary-btn" type="button" disabled={isBusy} onClick={() => run(deploySite)}>Actualizar web</button>
+            <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => window.location.reload()}>Refrescar estado</button>
           </div>
         </div>
         {workflowStatus ? (
@@ -471,8 +483,8 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
             <label>Hasta DD/MM/AAAA<input value={offerForm.fecha_fin} onChange={(event) => setOfferForm({ ...offerForm, fecha_fin: event.target.value })} /></label>
           </div>
           <div className="split-actions">
-            <button className="primary-btn" type="button" onClick={() => run(addOffer)}>1. Guardar oferta</button>
-            <button className="secondary-btn" type="button" onClick={() => run(deploySite)}>2. Actualizar web</button>
+            <button className="primary-btn" type="button" disabled={isBusy} onClick={() => run(addOffer)}>1. Guardar oferta</button>
+            <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => run(deploySite)}>2. Actualizar web</button>
           </div>
         </div>
       </section>
@@ -491,10 +503,10 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
                 <p>{offer.descripcion}</p>
                 <p>{offer.fecha_inicio} - {offer.fecha_fin}</p>
                 <div className="offer-actions">
-                  <button className="secondary-btn" type="button" onClick={() => openWhatsApp(offer)}>WhatsApp</button>
-                  <button className="secondary-btn" type="button" onClick={() => run(() => copyCaption(offer))}>Copiar caption</button>
-                  <button className="secondary-btn" type="button" onClick={() => publishOffer(offer)}>Publicar redes</button>
-                  <button className="danger-btn" type="button" onClick={() => run(() => saveOffers(offers.filter((entry) => entry.id !== offer.id)))}>Eliminar</button>
+                  <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => openWhatsApp(offer)}>WhatsApp</button>
+                  <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => run(() => copyCaption(offer))}>Copiar caption</button>
+                  <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => run(() => publishOffer(offer))}>Subir foto a Instagram @elcache10</button>
+                  <button className="danger-btn" type="button" disabled={isBusy} onClick={() => run(() => deleteOffer(offer))}>Eliminar</button>
                 </div>
               </div>
             </article>
@@ -509,10 +521,10 @@ export default function AdminDashboard({ offersDoc, servicesDoc }: Props) {
             <h2>Servicios de barberia, unas y envios</h2>
           </div>
           <div className="button-row">
-            <button className="secondary-btn" type="button" onClick={() => addService('Barber Services')}>Agregar barberia</button>
-            <button className="secondary-btn" type="button" onClick={() => addService('Nail Services')}>Agregar unas</button>
-            <button className="secondary-btn" type="button" onClick={() => addService('Money Transfer')}>Agregar envio</button>
-            <button className="primary-btn" type="button" onClick={() => run(saveServices)}>Guardar precios</button>
+            <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => addService('Barber Services')}>Agregar barberia</button>
+            <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => addService('Nail Services')}>Agregar unas</button>
+            <button className="secondary-btn" type="button" disabled={isBusy} onClick={() => addService('Money Transfer')}>Agregar envio</button>
+            <button className="primary-btn" type="button" disabled={isBusy} onClick={() => run(saveServices)}>Guardar precios</button>
           </div>
         </div>
         <div className="table-wrap">

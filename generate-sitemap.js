@@ -31,6 +31,7 @@ const PAGE_CONFIG = {
   'watch/shop-tour-2.html':    { priority: '0.7', changefreq: 'monthly' },
   'watch/shop-tour-3.html':    { priority: '0.7', changefreq: 'monthly' },
   'watch/anuncio-sillas.html': { priority: '0.6', changefreq: 'monthly' },
+  'guias/index.html': { priority: '0.8', changefreq: 'weekly' },
 };
 
 const DEFAULT_CONFIG = { priority: '0.5', changefreq: 'monthly' };
