@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updated_at": "2026-06-11T22:41:01.710Z",
+  "updated_at": "2026-09-08T10:48:41.886Z",
   "servicios": [
     {
       "id": "barber-dominican-style",
       "categoria": "Barber Services",
       "nombre": "Dominican Style Haircuts",
-      "precio_centavos": 2000,
+      "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
       "orden": 1
@@ -24,7 +24,7 @@
       "id": "barber-caesar",
       "categoria": "Barber Services",
       "nombre": "Caesar Cut",
-      "precio_centavos": 2000,
+      "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
       "orden": 3
@@ -51,7 +51,7 @@
       "id": "barber-kids-cut",
       "categoria": "Barber Services",
       "nombre": "Kids Cut",
-      "precio_centavos": 1800,
+      "precio_centavos": 2500,
       "etiqueta": "",
       "disponible": true,
       "orden": 6
