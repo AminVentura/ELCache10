@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-09-08T10:48:41.886Z",
+  "updated_at": "2026-09-18T10:59:52.222Z",
   "servicios": [
     {
       "id": "barber-dominican-style",
@@ -9,7 +9,8 @@
       "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
-      "orden": 1
+      "orden": 1,
+      "precio_min_centavos": null
     },
     {
       "id": "barber-fade",
@@ -33,7 +34,7 @@
       "id": "barber-hot-towel",
       "categoria": "Barber Services",
       "nombre": "Hot Towel Shave",
-      "precio_centavos": 3000,
+      "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
       "orden": 4
