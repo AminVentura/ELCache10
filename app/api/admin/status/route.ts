@@ -14,6 +14,7 @@ export async function GET(request: Request) {
     adminAccess: 'editor directo en admin.elcache10.com',
     githubToken: process.env.ADMIN_GITHUB_TOKEN ? 'configurado' : 'pendiente',
     deployHook: process.env.ADMIN_VERCEL_DEPLOY_HOOK_URL ? 'configurado' : 'no configurado; JSON raw activo',
-    files: ['data/ofertas.json', 'data/servicios.json'],
+    files: ['data/ofertas.json', 'data/servicios.json', 'roster citas.elcache10.com'],
+    staffSync: process.env.STAFF_ROSTER_SYNC_KEY ? 'configurado' : 'pendiente',
   });
 }

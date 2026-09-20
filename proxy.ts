@@ -22,7 +22,9 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    '/(api|trpc)(.*)',
+    // Exclude ads.txt / robots.txt / sitemap.xml so Googlebot does not hit Clerk handshake.
+    // /api/staff-photo is machine-to-machine (citas → www) with x-staff-sync-key, not Clerk.
+    '/((?!_next|api/staff-photo|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|txt|xml)).*)',
+    '/(api(?!/staff-photo)|trpc)(.*)',
   ],
 };

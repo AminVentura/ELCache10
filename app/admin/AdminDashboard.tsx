@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { EquipoPanel } from './EquipoPanel';
 
 export type Offer = {
   id: string;
@@ -379,6 +380,8 @@ export default function AdminDashboard({ offersDoc, servicesDoc, initialOfferFor
           <p>La Nacional y envios disponibles</p>
         </article>
       </section>
+
+      <EquipoPanel />
 
       <section className="quick-actions" aria-label="Accesos rapidos">
         <a className="quick-action" href="https://elcache10.com/" target="_blank" rel="noopener">Pagina publica</a>
