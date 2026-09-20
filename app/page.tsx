@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Script from 'next/script';
 import type { Metadata } from 'next';
-import { injectPublicOffersHtml, injectPublicServicesHtml, renderPublicOffersHtml } from '../lib/static-data.mjs';
+import { injectPublicOffersHtml, injectPublicServicesHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
 
 const ADSENSE_ACCOUNT = 'ca-pub-8721021745606812';
 
@@ -14,6 +14,14 @@ export const metadata: Metadata = {
     'Dominican barbershop in the Bronx offering haircuts, fades, nail services and La Nacional money transfers.',
   alternates: {
     canonical: 'https://elcache10.com/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
   other: {
     'google-adsense-account': ADSENSE_ACCOUNT,
@@ -55,8 +63,21 @@ export default async function Page() {
     readLiveJson('ofertas.json'),
     readLiveJson('servicios.json'),
   ]);
+  let teamHtml = '';
+  try {
+    const roster = await fetch(`https://citas.elcache10.com/api/staff?v=${Date.now()}`, { cache: 'no-store' });
+    if (roster.ok) {
+      const rosterJson = (await roster.json()) as { staff?: unknown[] };
+      teamHtml = renderPublicTeamHtml(rosterJson.staff);
+    }
+  } catch {
+    teamHtml = '';
+  }
   const offersHtml = renderPublicOffersHtml(offersDoc);
-  const body = injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc);
+  const body = injectPublicTeamHtml(
+    injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc),
+    teamHtml
+  );
   const jsonLd = extractJsonLd(html);
 
   return (
@@ -71,6 +92,7 @@ export default async function Page() {
         strategy="afterInteractive"
       />
       <Script src="/js/main.js" strategy="afterInteractive" />
+      <Script src="/js/cachebot-widget.js" strategy="afterInteractive" />
     </>
   );
 }

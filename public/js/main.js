@@ -22,6 +22,60 @@ function buildCalendarLink(name, phone, service, haircut, date, time, notes, dur
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${encodeURIComponent(details)}&location=${location}&ctz=America/New_York`;
 }
 
+let liveStaffRoster = [];
+
+function staffApiUrl() {
+  const host = location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:4488/api/staff';
+  return 'https://citas.elcache10.com/api/staff';
+}
+
+function applyLiveTeam(staff) {
+  liveStaffRoster = Array.isArray(staff) ? staff : [];
+  const grid = document.getElementById('team-grid');
+  if (!grid || !liveStaffRoster.length) return;
+  grid.innerHTML = liveStaffRoster
+    .map((person) => {
+      const name = String(person.name || '');
+      const role = String(person.role || '');
+      const photo = String(person.photoUrl || 'images/barbers-team.jpg');
+      const phone = String(person.phoneE164 || '').replace(/\D/g, '');
+      const tel = phone ? `+${phone}` : '+16463349409';
+      const wa = phone || '16463349409';
+      return `<article class="team-card reveal is-visible">
+        <div class="team-card-img-wrap"><img src="${photo}" alt="${name}" loading="lazy" width="400" height="400"></div>
+        <div class="team-card-body">
+          <h3 class="team-card-name">${name}</h3>
+          <p class="team-card-role">${role}</p>
+          <div class="team-card-contact-row">
+            <a href="tel:${tel}" class="btn btn-primary team-card-btn">Call</a>
+            <a href="https://wa.me/${wa}" class="btn btn-whatsapp team-card-btn" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </div>
+          <div class="barber-booking" data-barber-name="${name}">
+            <button type="button" class="btn btn-primary barber-booking-toggle">Reservar con ${name}</button>
+            <form class="barber-booking-form" hidden>
+              <input type="hidden" name="barber" value="${name}">
+              <button type="submit" class="btn btn-whatsapp btn-full">Enviar reserva por WhatsApp</button>
+            </form>
+          </div>
+        </div>
+      </article>`;
+    })
+    .join('');
+}
+
+async function loadLiveTeam() {
+  try {
+    const res = await fetch(staffApiUrl(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const json = await res.json();
+    applyLiveTeam(json.staff);
+    initBarberCardsBooking();
+  } catch {
+    /* La web se queda con las tarjetas del HTML. */
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initEmbeddedFrame();
   initNav();
@@ -36,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCollapsibles();
   initBackToTop();
   initScrollProgress();
+  loadLiveTeam();
 });
 
 /** When the site opens inside Google Translate (iframe), offset fixed header so it sits below their toolbar. */
@@ -143,32 +198,21 @@ function initBooking() {
   const today = new Date().toISOString().split('T')[0];
   if (dateInput) dateInput.setAttribute('min', today);
 
-  const staffOptions = {
-    barber: [
-      { value: '', label: 'Any available' },
-      { value: 'Barber 1', label: 'Barber 1' },
-      { value: 'Barber 2', label: 'Barber 2' },
-      { value: 'Barber 3', label: 'Barber 3' }
-    ],
-    nails: [
-      { value: '', label: 'Any available' },
-      { value: 'Nail technician', label: 'Nail technician' }
-    ],
-    combo: [
-      { value: '', label: 'Any available' },
-      { value: 'Barber 1', label: 'Barber 1' },
-      { value: 'Barber 2', label: 'Barber 2' },
-      { value: 'Barber 3', label: 'Barber 3' },
-      { value: 'Nail technician', label: 'Nail technician' }
-    ]
-  };
+  function liveOptions(kinds) {
+    const people = liveStaffRoster.filter((person) => kinds.includes(person.roleKind));
+    const rows = people.length
+      ? people.map((person) => ({ value: person.name, label: person.name }))
+      : [{ value: 'Francis', label: 'Francis (Owner)' }];
+    return [{ value: '', label: 'Any available' }, ...rows];
+  }
 
   function updateStaffOptions() {
+    if (!staffSelect) return;
     const val = serviceSelect?.value || '';
-    let opts = staffOptions.combo;
-    if (val === 'Barber' || val === 'Blow dry / Secado de pelo') opts = staffOptions.barber;
-    else if (val === 'Manicure' || val === 'Pedicure' || val === 'Acrylic nails') opts = staffOptions.nails;
-    staffSelect.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+    let opts = liveOptions(['barber', 'nails', 'salon', 'blowdry']);
+    if (val === 'Barber' || val === 'Blow dry / Secado de pelo') opts = liveOptions(['barber', 'blowdry', 'salon']);
+    else if (val === 'Manicure' || val === 'Pedicure' || val === 'Acrylic nails') opts = liveOptions(['nails']);
+    staffSelect.innerHTML = opts.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
   }
 
   function toggleHaircutField() {
@@ -334,20 +378,7 @@ function closeLightbox() {
 }
 
 function initReveal() {
-  const els = document.querySelectorAll('.reveal');
-  if (!els.length || !('IntersectionObserver' in window)) {
-    els.forEach(el => el.classList.add('is-visible'));
-    return;
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  els.forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
 }
 
 function initCollapsibles() {

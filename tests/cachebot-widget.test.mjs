@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import test from 'node:test';
+
+test('widget CacheBot no lleva claves y apunta a citas.elcache10.com', () => {
+  const js = readFileSync(new URL('../js/cachebot-widget.js', import.meta.url), 'utf8');
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../css/style.css', import.meta.url), 'utf8');
+  assert.match(html, /js\/cachebot-widget\.js/);
+  assert.match(page, /js\/cachebot-widget\.js/);
+  assert.match(js, /con Francis hoy a las 4pm/);
+  assert.match(js, /Quiero un corte con Francis/);
+  assert.match(js, /injectStyles/);
+  assert.match(js, /cachebot-styles/);
+  assert.match(js, /SOLO en www\.elcache10\.com/);
+  assert.match(js, /if \(!onShopSite\(\)/);
+  assert.match(js, /cachebot-panel\[hidden\]/);
+  assert.match(js, /Minimizar chat/);
+  assert.match(js, /setOpen\(!open\)/);
+  assert.equal(js.includes('launcher.hidden = open'), false);
+  assert.equal(js.includes('con Alex hoy a las 4pm'), false);
+  assert.match(js, /sessionStorage/);
+  assert.match(js, /textContent/);
+  assert.equal(js.includes('localStorage'), false);
+  assert.equal(js.includes('OPENROUTER'), false);
+  assert.equal(js.includes('ANTHROPIC'), false);
+  assert.equal(js.includes('innerHTML'), false);
+  assert.match(css, /\.cachebot-root/);
+  assert.match(css, /cachebot-panel\[hidden\]/);
+  assert.match(css, /\.reveal \{\s*opacity: 1/);
+  assert.equal(css.includes('opacity: 0;\n  transform: translateY(22px)'), false);
+  assert.equal(/\.\s*hero[\s\S]*background-image:\s*url\(['"]?images\/logo\.jpg/.test(css), false);
+});

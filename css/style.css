@@ -437,6 +437,8 @@ ul {
   width: 52px;
   object-fit: contain;
   flex: 0 0 auto;
+  /* logo.jpg es JPG con fondo blanco: multiply lo hace transparente sobre el header oscuro */
+  mix-blend-mode: multiply;
 }
 
 .nav-logo-text {
@@ -529,20 +531,19 @@ ul {
   margin-left: 1rem;
 }
 
-/* Hero - Logo como fondo de pantalla */
+/* Hero: foto del local. logo.jpg como cover deja marcos blancos y huecos. */
 .hero {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: min(100dvh, 52rem);
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #0a0a0a;
-  background-image: url('../images/logo.jpg');
+  background-image: url('../images/exterior-tienda.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: center 35%;
   background-repeat: no-repeat;
-  padding: calc(var(--fixed-header-stack) + 2rem) 1.5rem 2rem;
+  padding: calc(var(--fixed-header-stack) + 1.25rem) 1.25rem 1.75rem;
   overflow: hidden;
 }
 
@@ -550,7 +551,7 @@ ul {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.4) 50%, rgba(10, 10, 10, 0.5) 100%);
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.62) 0%, rgba(10, 10, 10, 0.48) 45%, rgba(10, 10, 10, 0.72) 100%);
   pointer-events: none;
 }
 
@@ -565,12 +566,26 @@ ul {
   position: relative;
   text-align: center;
   z-index: 1;
+  width: min(100%, 40rem);
   background: rgba(10, 10, 10, 0.35);
   padding: 2rem 1.5rem;
   border-radius: var(--radius-lg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 767px) {
+  .hero-content {
+    padding: 1.25rem 1rem 5.75rem;
+  }
+  .hero-tagline {
+    font-size: clamp(2.35rem, 12vw, 3.4rem);
+  }
+  .float-actions {
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+    right: max(0.75rem, env(safe-area-inset-right, 0px));
+  }
 }
 
 .hero-brand-top {
@@ -591,13 +606,29 @@ ul {
 }
 
 .hero-logo {
-  width: clamp(100px, 20vw, 160px);
+  width: clamp(88px, 18vw, 132px);
   height: auto;
-  max-height: 160px;
+  max-height: 132px;
   object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
-.hero-brand-name {
+@media (max-width: 639px) {
+  .hero-pole-icon,
+  .hero-brand-name {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-pole-icon,
+  .hero-brand-name {
+    display: none;
+  }
+  .hero {
+    min-height: min(88dvh, 40rem);
+  }
+}
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 4vw, 2.25rem);
   font-weight: 700;
@@ -1247,19 +1278,19 @@ ul {
 }
 
 .gallery-item-contain {
-  background: var(--color-bg);
+  background: var(--color-navy);
 }
 
 .gallery-item-contain img {
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
-  padding: clamp(0.35rem, 2vw, 0.75rem);
 }
 
 .gallery-item-logo img {
   object-fit: contain;
   object-position: center;
-  padding: clamp(0.75rem, 3vw, 1.5rem);
+  padding: clamp(0.5rem, 2vw, 1rem);
+  mix-blend-mode: multiply;
 }
 
 .gallery-item:hover img {
@@ -1418,7 +1449,7 @@ ul {
 }
 
 .gallery-item-logo {
-  background: var(--color-bg);
+  background: var(--color-navy);
 }
 
 @media (max-width: 479px) {
@@ -2738,18 +2769,11 @@ body.watch-page {
   }
 }
 
-/* ============================================
-   Scroll Reveal
-   ============================================ */
+/* Scroll reveal: ALWAYS visible. Hiding until IntersectionObserver fires
+   left ATM/Notary/Tax, gallery, and barber phones at opacity 0 (selectable but invisible). */
 .reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2967,6 +2991,7 @@ body.watch-page {
 .team-card-img-wrap {
   aspect-ratio: 1;
   overflow: hidden;
+  background: var(--color-navy);
 }
 
 .team-card-img-wrap img {
@@ -4333,5 +4358,176 @@ body.watch-page {
 
   .value-card-icon {
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  }
+}
+
+/* ============================================
+   CACHEBOT — widget de citas (elcache10.com)
+   Encima de Call/WhatsApp, sin tapar el hero.
+   ============================================ */
+.cachebot-root {
+  position: fixed;
+  right: max(1.25rem, env(safe-area-inset-right, 0px));
+  bottom: calc(8.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 10050;
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+
+.cachebot-launcher,
+.cachebot-panel {
+  pointer-events: auto;
+}
+
+.cachebot-launcher {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--color-gold);
+  border-radius: 50%;
+  background: var(--color-navy);
+  color: var(--color-gold);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+}
+
+.cachebot-launcher:hover,
+.cachebot-launcher:focus-visible {
+  background: var(--color-gold);
+  color: var(--color-black);
+  outline: none;
+}
+
+.cachebot-panel {
+  width: min(22rem, calc(100vw - 1.5rem));
+  max-height: min(28rem, calc(100vh - 8rem));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-navy);
+  color: #fff;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin-bottom: 0.65rem;
+}
+
+.cachebot-panel[hidden] {
+  display: none !important;
+}
+
+.cachebot-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.85rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+  background: #0a1224;
+}
+
+.cachebot-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.cachebot-head-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cachebot-icon-btn,
+.cachebot-close,
+.cachebot-min {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--color-gold);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cachebot-icon-btn:hover,
+.cachebot-icon-btn:focus-visible,
+.cachebot-close:hover,
+.cachebot-close:focus-visible,
+.cachebot-min:hover,
+.cachebot-min:focus-visible {
+  color: #fff;
+  outline: 2px solid var(--color-gold);
+  outline-offset: -2px;
+}
+
+.cachebot-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 10rem;
+}
+
+.cachebot-msg {
+  max-width: 92%;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cachebot-msg--assistant {
+  align-self: flex-start;
+  background: #1e293b;
+}
+
+.cachebot-msg--user {
+  align-self: flex-end;
+  background: rgba(212, 175, 55, 0.18);
+  color: var(--color-gold-light);
+}
+
+.cachebot-form {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.65rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.cachebot-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #fff;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+}
+
+.cachebot-send {
+  border: 0;
+  border-radius: 6px;
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-weight: 700;
+  padding: 0.5rem 0.7rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .cachebot-root {
+    bottom: calc(8.25rem + env(safe-area-inset-bottom, 0px));
+    right: 1.5rem;
   }
 }
