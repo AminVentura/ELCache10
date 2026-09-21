@@ -30,15 +30,50 @@ function staffApiUrl() {
   return 'https://citas.elcache10.com/api/staff';
 }
 
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function bookingStaffKinds(serviceValue) {
+  const val = String(serviceValue || '');
+  if (val === 'Barber' || val === 'Blow dry / Secado de pelo') return ['barber', 'blowdry', 'salon'];
+  if (val === 'Manicure' || val === 'Pedicure' || val === 'Acrylic nails') return ['nails'];
+  return ['barber', 'nails', 'salon', 'blowdry'];
+}
+
+function refreshBookingStaffSelect() {
+  const staffSelect = document.getElementById('booking-staff');
+  const serviceSelect = document.getElementById('booking-service');
+  if (!staffSelect || !liveStaffRoster.length) return;
+  const previous = staffSelect.value;
+  const kinds = bookingStaffKinds(serviceSelect?.value);
+  const people = liveStaffRoster.filter((person) => kinds.includes(person.roleKind));
+  const options = ['<option value="">Any available</option>'].concat(
+    people
+      .map((person) => String(person.name || '').trim())
+      .filter(Boolean)
+      .map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+  );
+  staffSelect.innerHTML = options.join('');
+  if (previous && [...staffSelect.options].some((opt) => opt.value === previous)) {
+    staffSelect.value = previous;
+  }
+}
+
 function applyLiveTeam(staff) {
   liveStaffRoster = Array.isArray(staff) ? staff : [];
+  refreshBookingStaffSelect();
   const grid = document.getElementById('team-grid');
   if (!grid || !liveStaffRoster.length) return;
   grid.innerHTML = liveStaffRoster
     .map((person) => {
-      const name = String(person.name || '');
-      const role = String(person.role || '');
-      const photo = String(person.photoUrl || 'images/barbers-team.jpg');
+      const name = escapeHtml(person.name || '');
+      const role = escapeHtml(person.role || '');
+      const photo = escapeHtml(person.photoUrl || 'images/barbers-team.jpg');
       const phone = String(person.phoneE164 || '').replace(/\D/g, '');
       const tel = phone ? `+${phone}` : '+16463349409';
       const wa = phone || '16463349409';
@@ -198,34 +233,19 @@ function initBooking() {
   const today = new Date().toISOString().split('T')[0];
   if (dateInput) dateInput.setAttribute('min', today);
 
-  function liveOptions(kinds) {
-    const people = liveStaffRoster.filter((person) => kinds.includes(person.roleKind));
-    const rows = people.length
-      ? people.map((person) => ({ value: person.name, label: person.name }))
-      : [{ value: 'Francis', label: 'Francis (Owner)' }];
-    return [{ value: '', label: 'Any available' }, ...rows];
-  }
-
-  function updateStaffOptions() {
-    if (!staffSelect) return;
-    const val = serviceSelect?.value || '';
-    let opts = liveOptions(['barber', 'nails', 'salon', 'blowdry']);
-    if (val === 'Barber' || val === 'Blow dry / Secado de pelo') opts = liveOptions(['barber', 'blowdry', 'salon']);
-    else if (val === 'Manicure' || val === 'Pedicure' || val === 'Acrylic nails') opts = liveOptions(['nails']);
-    staffSelect.innerHTML = opts.map((o) => `<option value="${o.value}">${o.label}</option>`).join('');
-  }
-
   function toggleHaircutField() {
     const val = serviceSelect?.value || '';
-    haircutWrap.style.display = val.includes('Barber') || val === 'Blow dry / Secado de pelo' ? 'block' : 'none';
+    if (haircutWrap) {
+      haircutWrap.style.display = val.includes('Barber') || val === 'Blow dry / Secado de pelo' ? 'block' : 'none';
+    }
   }
 
   serviceSelect?.addEventListener('change', () => {
     toggleHaircutField();
-    updateStaffOptions();
+    refreshBookingStaffSelect();
   });
   toggleHaircutField();
-  updateStaffOptions();
+  refreshBookingStaffSelect();
 
   btn.addEventListener('click', () => {
     const name = document.getElementById('booking-name')?.value?.trim();

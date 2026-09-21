@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Script from 'next/script';
 import type { Metadata } from 'next';
-import { injectPublicOffersHtml, injectPublicServicesHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
+import { injectPublicOffersHtml, injectPublicServicesHtml, injectPublicStaffOptionsHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicStaffOptionsHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
 
 const ADSENSE_ACCOUNT = 'ca-pub-8721021745606812';
 
@@ -64,19 +64,25 @@ export default async function Page() {
     readLiveJson('servicios.json'),
   ]);
   let teamHtml = '';
+  let staffOptionsHtml = '';
   try {
     const roster = await fetch(`https://citas.elcache10.com/api/staff?v=${Date.now()}`, { cache: 'no-store' });
     if (roster.ok) {
       const rosterJson = (await roster.json()) as { staff?: unknown[] };
       teamHtml = renderPublicTeamHtml(rosterJson.staff);
+      staffOptionsHtml = renderPublicStaffOptionsHtml(rosterJson.staff);
     }
   } catch {
     teamHtml = '';
+    staffOptionsHtml = '';
   }
   const offersHtml = renderPublicOffersHtml(offersDoc);
-  const body = injectPublicTeamHtml(
-    injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc),
-    teamHtml
+  const body = injectPublicStaffOptionsHtml(
+    injectPublicTeamHtml(
+      injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc),
+      teamHtml
+    ),
+    staffOptionsHtml
   );
   const jsonLd = extractJsonLd(html);
 

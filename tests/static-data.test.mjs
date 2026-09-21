@@ -8,10 +8,12 @@ import {
   getActiveOffers,
   injectPublicOffersHtml,
   injectPublicServicesHtml,
+  injectPublicStaffOptionsHtml,
   normalizeServiceCatalog,
   parseUsdInputToCents,
   renderPublicOffersHtml,
   renderPublicServiceListHtml,
+  renderPublicStaffOptionsHtml,
   validateOfferPayload,
   validateServicePayload,
 } from '../lib/static-data.mjs';
@@ -236,6 +238,26 @@ test('normalizeServiceCatalog groups visible services by category and order', ()
   assert.equal(grouped.length, 1);
   assert.equal(grouped[0].categoria, 'Barber Services');
   assert.deepEqual(grouped[0].servicios.map((service) => service.id), ['cut', 'fade']);
+});
+
+test('booking-staff options follow the live roster names Francis adds', () => {
+  const options = renderPublicStaffOptionsHtml([
+    { name: 'Francis' },
+    { name: 'Nueva Silla' },
+    { name: '<script>' },
+  ]);
+  assert.match(options, /<option value="">Any available<\/option>/);
+  assert.match(options, /<option value="Francis">Francis<\/option>/);
+  assert.match(options, /<option value="Nueva Silla">Nueva Silla<\/option>/);
+  assert.match(options, /&lt;script&gt;/);
+  assert.doesNotMatch(options, /<script>/);
+
+  const injected = injectPublicStaffOptionsHtml(
+    '<select id="booking-staff"><option value="Old">Old</option></select>',
+    options
+  );
+  assert.match(injected, /Nueva Silla/);
+  assert.doesNotMatch(injected, />Old</);
 });
 
 test('validators reject malformed offer and service payloads', () => {
