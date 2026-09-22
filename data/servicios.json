@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updated_at": "2026-09-18T10:59:52.222Z",
+  "updated_at": "2026-09-22T17:25:17.828Z",
   "servicios": [
     {
       "id": "barber-dominican-style",
       "categoria": "Barber Services",
       "nombre": "Dominican Style Haircuts",
-      "precio_centavos": 3500,
+      "precio_centavos": 4000,
       "etiqueta": "",
       "disponible": true,
       "orden": 1,
@@ -16,7 +16,7 @@
       "id": "barber-fade",
       "categoria": "Barber Services",
       "nombre": "Fade",
-      "precio_centavos": 3500,
+      "precio_centavos": 4000,
       "etiqueta": "",
       "disponible": true,
       "orden": 2
@@ -34,7 +34,7 @@
       "id": "barber-hot-towel",
       "categoria": "Barber Services",
       "nombre": "Hot Towel Shave",
-      "precio_centavos": 3500,
+      "precio_centavos": 4500,
       "etiqueta": "",
       "disponible": true,
       "orden": 4
@@ -43,7 +43,7 @@
       "id": "barber-blow-dry",
       "categoria": "Barber Services",
       "nombre": "Blow dry / Secado de pelo",
-      "precio_centavos": 3000,
+      "precio_centavos": 4000,
       "etiqueta": "",
       "disponible": true,
       "orden": 5
@@ -61,7 +61,7 @@
       "id": "nails-manicure",
       "categoria": "Nail Services",
       "nombre": "Manicure",
-      "precio_centavos": 3000,
+      "precio_centavos": 3500,
       "etiqueta": "",
       "disponible": true,
       "orden": 1
@@ -79,7 +79,7 @@
       "id": "nails-acrylic",
       "categoria": "Nail Services",
       "nombre": "Acrylic Nails",
-      "precio_centavos": 4500,
+      "precio_centavos": 6000,
       "etiqueta": "",
       "disponible": true,
       "orden": 3
