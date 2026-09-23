@@ -128,19 +128,19 @@ main > * {
   order: 80;
 }
 
-#gallery {
+#booking {
   order: 90;
 }
 
-#reviews {
+#contact {
   order: 100;
 }
 
-#booking {
+#gallery {
   order: 110;
 }
 
-#contact {
+#reviews {
   order: 120;
 }
 
