@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Script from 'next/script';
 import type { Metadata } from 'next';
-import { injectPublicOffersHtml, injectPublicServicesHtml, injectPublicStaffOptionsHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicStaffOptionsHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
+import { injectPublicFaqPrices, injectPublicOffersHtml, injectPublicServicesHtml, injectPublicStaffOptionsHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicStaffOptionsHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
 
 const ADSENSE_ACCOUNT = 'ca-pub-8721021745606812';
 
@@ -77,12 +77,15 @@ export default async function Page() {
     staffOptionsHtml = '';
   }
   const offersHtml = renderPublicOffersHtml(offersDoc);
-  const body = injectPublicStaffOptionsHtml(
-    injectPublicTeamHtml(
-      injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc),
-      teamHtml
+  const body = injectPublicFaqPrices(
+    injectPublicStaffOptionsHtml(
+      injectPublicTeamHtml(
+        injectPublicServicesHtml(injectPublicOffersHtml(extractBody(html), offersHtml), servicesDoc),
+        teamHtml
+      ),
+      staffOptionsHtml
     ),
-    staffOptionsHtml
+    servicesDoc
   );
   const jsonLd = extractJsonLd(html);
 

@@ -66,8 +66,8 @@ export default async function AdminPage() {
             <p className="eyebrow">Administracion El Cache 10</p>
             <h1>Control Room Barberia</h1>
             <p>
-              Cambia precios, sube ofertas con foto y prepara Instagram. Los cambios se guardan
-              en GitHub y los lee la pagina publica de El Cache 10.
+              Cambia precios, sube ofertas con foto y prepara Instagram. El precio se guarda
+              en GitHub y lo leen la web, citas.elcache10.com y CacheBot.
             </p>
           </div>
           <div className="admin-actions">

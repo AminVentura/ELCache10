@@ -6,6 +6,7 @@ import {
   buildBarberOfferCaption,
   formatPriceFromCents,
   getActiveOffers,
+  injectPublicFaqPrices,
   injectPublicOffersHtml,
   injectPublicServicesHtml,
   injectPublicStaffOptionsHtml,
@@ -258,6 +259,30 @@ test('booking-staff options follow the live roster names Francis adds', () => {
   );
   assert.match(injected, /Nueva Silla/);
   assert.doesNotMatch(injected, />Old</);
+});
+
+test('FAQ de la home toma los precios del JSON del admin', () => {
+  const payload = {
+    version: 1,
+    servicios: [
+      { id: 'barber-dominican-style', categoria: 'Barber Services', nombre: 'Dominican Style Haircuts', precio_centavos: 4000, etiqueta: '', disponible: true, orden: 1 },
+      { id: 'barber-fade', categoria: 'Barber Services', nombre: 'Fade', precio_centavos: 4000, etiqueta: '', disponible: true, orden: 2 },
+      { id: 'barber-caesar', categoria: 'Barber Services', nombre: 'Caesar Cut', precio_centavos: 3500, etiqueta: '', disponible: true, orden: 3 },
+      { id: 'barber-hot-towel', categoria: 'Barber Services', nombre: 'Hot Towel Shave', precio_centavos: 4500, etiqueta: '', disponible: true, orden: 4 },
+      { id: 'barber-blow-dry', categoria: 'Barber Services', nombre: 'Blow dry / Secado de pelo', precio_centavos: 4000, etiqueta: '', disponible: true, orden: 5 },
+      { id: 'barber-kids-cut', categoria: 'Barber Services', nombre: 'Kids Cut', precio_centavos: 2500, etiqueta: '', disponible: true, orden: 6 },
+      { id: 'nails-manicure', categoria: 'Nail Services', nombre: 'Manicure', precio_centavos: 3500, etiqueta: '', disponible: true, orden: 1 },
+      { id: 'nails-pedicure', categoria: 'Nail Services', nombre: 'Pedicure', precio_centavos: 4500, etiqueta: '', disponible: true, orden: 2 },
+      { id: 'nails-acrylic', categoria: 'Nail Services', nombre: 'Acrylic Nails', precio_centavos: 6000, etiqueta: '', disponible: true, orden: 3 },
+    ],
+  };
+  const html = `<details class="faq-item"><summary>¿Cuánto cuesta un corte en El Caché 10?</summary><div class="faq-answer"><p>Corte Dominicano $20.</p></div></details>
+<details class="faq-item"><summary>¿Atienden a niños?</summary><div class="faq-answer"><p>El corte de niños tiene un precio especial de <strong>$18</strong>.</p></div></details>`;
+  const next = injectPublicFaqPrices(html, payload);
+  assert.match(next, /Dominican Style Haircuts \$40/);
+  assert.match(next, /Acrylic Nails \$60/);
+  assert.doesNotMatch(next, /\$20/);
+  assert.match(next, /precio especial de <strong>\$25<\/strong>/);
 });
 
 test('validators reject malformed offer and service payloads', () => {
