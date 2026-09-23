@@ -280,7 +280,9 @@ test('FAQ de la home toma los precios del JSON del admin', () => {
 <details class="faq-item"><summary>¿Atienden a niños?</summary><div class="faq-answer"><p>El corte de niños tiene un precio especial de <strong>$18</strong>.</p></div></details>`;
   const next = injectPublicFaqPrices(html, payload);
   assert.match(next, /Dominican Style Haircuts \$40/);
+  assert.match(next, /Kids Cut \$25, Hot Towel/);
   assert.match(next, /Acrylic Nails \$60/);
+  assert.doesNotMatch(next, /<\/p>5/);
   assert.doesNotMatch(next, /\$20/);
   assert.match(next, /precio especial de <strong>\$25<\/strong>/);
 });
