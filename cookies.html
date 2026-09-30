@@ -8,7 +8,6 @@
     <meta name="description" content="Política de Cookies de El Caché 10 Barbershop - Información sobre el uso de cookies.">
     <meta name="robots" content="index, follow">
     <meta name="google-adsense-account" content="ca-pub-8721021745606812">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8721021745606812" crossorigin="anonymous"></script>
     <link rel="canonical" href="https://elcache10.com/cookies.html">
     <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="icon" href="images/favicon.png" type="image/png" sizes="192x192">
@@ -19,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="/js/consent.js"></script>
 </head>
 <body>
     <a href="#main" class="skip-link">Ir al contenido</a>
@@ -54,30 +54,28 @@
     <main id="main" class="legal-page section">
         <div class="container">
             <h1>Política de Cookies</h1>
-            <p class="legal-update">Última actualización: 15/02/2026</p>
+            <p class="legal-update">Última actualización: 29/09/2026</p>
 
             <p>Esta política describe las cookies y tecnologías similares utilizadas en el sitio web de El Caché 10 Barbershop.</p>
 
             <h2>1. ¿Qué son las cookies?</h2>
             <p>Las cookies son pequeños archivos de texto que los sitios web guardan en tu dispositivo para recordar preferencias o información de navegación.</p>
 
-            <h2>2. Tipos de cookies que utilizamos</h2>
+            <h2>2. Qué usamos</h2>
             <ul>
-                <li><strong>Cookies técnicas:</strong> necesarias para el funcionamiento del sitio (sesión, preferencias básicas).</li>
-                <li><strong>Cookies de análisis:</strong> nos ayudan a entender cómo se usa el sitio.</li>
-                <li><strong>Cookies de publicidad:</strong> Google AdSense utiliza cookies para mostrar anuncios relevantes. Terceros como Google pueden recopilar información para personalizar anuncios según tus visitas a este y otros sitios.</li>
+                <li><strong>Necesarias (sin permiso):</strong> tu elección de cookies (<code>localStorage</code>, clave <code>elcache10CookiePrefs</code>) y el identificador de sesión del chat CacheBot (<code>sessionStorage</code>, se borra al cerrar la pestaña).</li>
+                <li><strong>Publicidad (con permiso):</strong> Google AdSense y sus socios usan cookies para mostrar y medir anuncios y, si lo permites, personalizarlos. El script de AdSense <strong>no se carga</strong> hasta que aceptas.</li>
+                <li><strong>Mapa (con permiso o a petición):</strong> Google Maps puede usar cookies al cargar el mapa. Solo se carga si pulsas «Cargar mapa» o lo aceptas en el banner.</li>
             </ul>
+            <p>No usamos cookies de análisis. Google Fonts recibe tu dirección IP al cargar las tipografías.</p>
 
-            <h2>3. Google AdSense</h2>
-            <p>Usamos Google AdSense para mostrar anuncios. Google y sus partners utilizan cookies para:</p>
-            <ul>
-                <li>Mostrar anuncios según tus visitas previas.</li>
-                <li>Medir la eficacia de los anuncios.</li>
-            </ul>
-            <p>Puedes gestionar tus preferencias en <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Configuración de anuncios de Google</a>. Más información en la <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Política de cookies de Google</a>.</p>
+            <h2>3. Google AdSense y Consent Mode</h2>
+            <p>Usamos Google Consent Mode v2: por defecto, el almacenamiento publicitario está denegado. Con tu permiso, Google y sus partners usan cookies para mostrar anuncios según tus visitas previas y medir su eficacia. Puedes gestionar tus preferencias en <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Configuración de anuncios de Google</a>. Más información en la <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Política de cookies de Google</a>.</p>
 
-            <h2>4. Cómo gestionar las cookies</h2>
-            <p>Puedes configurar tu navegador para rechazar o eliminar cookies. Ten en cuenta que bloquear cookies puede afectar la funcionalidad del sitio.</p>
+            <h2 id="preferencias">4. Cambiar tus preferencias</h2>
+            <p>Puedes aceptar, rechazar o configurar (publicidad, personalización, mapa) y cambiarlo cuando quieras:</p>
+            <p><button type="button" class="cookie-btn" data-cookie-prefs>Abrir preferencias de cookies</button></p>
+            <p>También puedes borrar los datos del sitio desde tu navegador. Si retiras un permiso con el anuncio o el mapa ya cargados, la página se recarga sin ellos.</p>
 
             <h2>5. Cambios</h2>
             <p>Podemos actualizar esta política. La fecha de última modificación figurará al inicio.</p>
@@ -96,8 +94,10 @@
                     <a href="privacidad.html">Política de Privacidad</a>
                     <span aria-hidden="true">|</span>
                     <a href="cookies.html">Política de Cookies</a>
+                    <span aria-hidden="true">|</span>
+                    <a href="cookies.html#preferencias" data-cookie-prefs>Preferencias de cookies</a>
                 </nav>
-                <p class="footer-update">Última actualización: 15/02/2026</p>
+                <p class="footer-update">Última actualización: 29/09/2026</p>
                 <a href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener noreferrer" class="footer-instagram">@elcache10</a>
             </div>
         </div>

@@ -26,15 +26,12 @@ const EXCLUDED = new Set([
 // Prioridades y frecuencias por página (relativas a BASE_URL)
 const PAGE_CONFIG = {
   'index.html':                { priority: '1.0', changefreq: 'weekly' },
-  'watch/francis.html':        { priority: '0.7', changefreq: 'monthly' },
-  'watch/shop-tour-1.html':    { priority: '0.7', changefreq: 'monthly' },
-  'watch/shop-tour-2.html':    { priority: '0.7', changefreq: 'monthly' },
-  'watch/shop-tour-3.html':    { priority: '0.7', changefreq: 'monthly' },
-  'watch/anuncio-sillas.html': { priority: '0.6', changefreq: 'monthly' },
-  'guias/index.html': { priority: '0.8', changefreq: 'weekly' },
+  'guias/index.html':          { priority: '0.8', changefreq: 'weekly' },
 };
 
 const DEFAULT_CONFIG = { priority: '0.5', changefreq: 'monthly' };
+const GUIAS_CONFIG = { priority: '0.8', changefreq: 'weekly' };
+const WATCH_CONFIG = { priority: '0.4', changefreq: 'monthly' };
 // ──────────────────────────────────────────────────────────────────────────────
 
 function getLastMod(filePath) {
@@ -63,10 +60,22 @@ function scanHtmlFiles(dir, baseDir) {
   return results;
 }
 
+function locFor(rel) {
+  if (rel === 'index.html') return `${BASE_URL}/`;
+  if (rel === 'guias/index.html') return `${BASE_URL}/guias/`;
+  return `${BASE_URL}/${rel}`;
+}
+
+function configFor(rel) {
+  if (PAGE_CONFIG[rel]) return PAGE_CONFIG[rel];
+  if (rel.startsWith('guias/')) return GUIAS_CONFIG;
+  if (rel.startsWith('watch/')) return WATCH_CONFIG;
+  return DEFAULT_CONFIG;
+}
+
 function buildUrl({ fullPath, rel }) {
-  const isIndex = rel === 'index.html';
-  const loc     = isIndex ? `${BASE_URL}/` : `${BASE_URL}/${rel}`;
-  const config  = PAGE_CONFIG[rel] || DEFAULT_CONFIG;
+  const loc     = locFor(rel);
+  const config  = configFor(rel);
   const lastmod = getLastMod(fullPath);
   return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${config.changefreq}</changefreq>\n    <priority>${config.priority}</priority>\n  </url>`;
 }
@@ -76,8 +85,8 @@ function generateSitemap() {
     const files = scanHtmlFiles(SITE_DIR, SITE_DIR).sort((a, b) => {
       if (a.rel === 'index.html') return -1;
       if (b.rel === 'index.html') return 1;
-      const pA = parseFloat((PAGE_CONFIG[a.rel] || DEFAULT_CONFIG).priority);
-      const pB = parseFloat((PAGE_CONFIG[b.rel] || DEFAULT_CONFIG).priority);
+      const pA = parseFloat(configFor(a.rel).priority);
+      const pB = parseFloat(configFor(b.rel).priority);
       return pB - pA;
     });
 
@@ -99,7 +108,7 @@ ${urlEntries}
     console.log(`📄 Guardado en: ${OUTPUT}`);
     console.log('\n🔗 URLs incluidas:');
     files.forEach(({ rel }) => {
-      const loc = rel === 'index.html' ? `${BASE_URL}/` : `${BASE_URL}/${rel}`;
+      const loc = locFor(rel);
       console.log(`   ${loc}`);
     });
     console.log('\n📋 Próximo paso: Enviar en Google Search Console');

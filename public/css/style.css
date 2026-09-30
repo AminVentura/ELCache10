@@ -4531,3 +4531,70 @@ body.watch-page {
     right: 1.5rem;
   }
 }
+
+/* ===== Consentimiento de cookies (js/consent.js, 2026-09-29) ===== */
+.cookie-banner {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 10100; /* por encima de #cachebot-root (10050) */
+  background: var(--color-navy);
+  color: #f1f5f9;
+  border-top: 3px solid var(--color-gold);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.35);
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  transform: translateY(100%);
+  visibility: hidden;
+  transition: transform 0.3s ease, visibility 0s linear 0.3s;
+  font-family: var(--font-sans);
+}
+.cookie-banner.show { transform: translateY(0); visibility: visible; transition: transform 0.3s ease; }
+.cookie-content { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+.cookie-text { flex: 1 1 320px; font-size: 0.92rem; line-height: 1.45; }
+.cookie-title { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: 0.02em; color: #fff; margin: 0 0 0.25rem; }
+.cookie-text p { margin: 0; color: #e2e8f0; }
+.cookie-text a { color: var(--color-gold-light); text-decoration: underline; }
+.cookie-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.cookie-btn {
+  min-height: 44px;
+  padding: 0.55rem 1.2rem;
+  border-radius: 8px;
+  border: 2px solid var(--color-gold);
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cookie-btn:hover { background: var(--color-gold-light); border-color: var(--color-gold-light); }
+.cookie-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.cookie-btn--ghost { background: transparent; color: #f1f5f9; border-color: #94a3b8; }
+.cookie-btn--ghost:hover { background: var(--color-navy-light); border-color: #f1f5f9; }
+.cookie-settings { max-width: 1100px; margin: 1rem auto 0; font-size: 0.92rem; }
+.cookie-settings fieldset { border: 1px solid #334155; border-radius: 8px; padding: 0.75rem 1rem; margin: 0 0 0.75rem; }
+.cookie-settings legend { padding: 0 0.25rem; font-weight: 700; }
+.cookie-settings label { display: flex; gap: 0.5rem; align-items: flex-start; margin: 0.4rem 0; }
+.cookie-settings input { margin-top: 0.2rem; width: 1.1rem; height: 1.1rem; accent-color: var(--color-gold); }
+@media (max-width: 600px) {
+  .cookie-content { flex-direction: column; align-items: stretch; }
+  .cookie-buttons .cookie-btn { flex: 1 1 30%; }
+}
+
+/* Placeholder del mapa hasta que el usuario lo pida */
+.map-consent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+  color: #f1f5f9;
+}
+.map-consent-text { font-family: var(--font-display); font-size: 1.2rem; color: var(--color-gold-light); margin: 0; }
+.map-consent-note { font-size: 0.9rem; color: #cbd5e1; margin: 0; max-width: 32rem; }
+.map-consent-btn { min-height: 44px; }

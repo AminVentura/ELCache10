@@ -94,12 +94,8 @@ export default async function Page() {
       <link rel="stylesheet" href="/css/style.css" />
       {jsonLd ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} /> : null}
       <div dangerouslySetInnerHTML={{ __html: body }} />
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ACCOUNT}`}
-        crossOrigin="anonymous"
-        strategy="afterInteractive"
-      />
+      {/* 2026-09-29: AdSense y Google Maps solo tras consentimiento (Consent Mode v2). consent.js inyecta adsbygoogle.js si el usuario acepta. */}
+      <Script src="/js/consent.js" strategy="afterInteractive" />
       <Script src="/js/main.js" strategy="afterInteractive" />
       <Script src="/js/cachebot-widget.js" strategy="afterInteractive" />
     </>

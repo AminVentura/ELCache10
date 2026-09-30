@@ -1,7 +1,7 @@
 /* El Caché 10 Barbershop - Optimized */
 
 /** Paste your public Booksy booking URL (Booksy Biz → Profile → Share / "Copy link"). */
-const BOOKSY_BOOKING_URL = 'https://elchache10.booksy.com';
+const BOOKSY_BOOKING_URL = 'https://elcache10.booksy.com';
 
 let lightboxTrigger = null;
 

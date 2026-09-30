@@ -8,7 +8,6 @@
     <meta name="description" content="Política de Privacidad de El Caché 10 Barbershop - Cómo protegemos tus datos personales.">
     <meta name="robots" content="index, follow">
     <meta name="google-adsense-account" content="ca-pub-8721021745606812">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8721021745606812" crossorigin="anonymous"></script>
     <link rel="canonical" href="https://elcache10.com/privacidad.html">
     <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="icon" href="images/favicon.png" type="image/png" sizes="192x192">
@@ -19,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="/js/consent.js"></script>
 </head>
 <body>
     <a href="#main" class="skip-link">Ir al contenido</a>
@@ -54,33 +54,48 @@
     <main id="main" class="legal-page section">
         <div class="container">
             <h1>Política de Privacidad</h1>
-            <p class="legal-update">Última actualización: 15/02/2026</p>
+            <p class="legal-update">Última actualización: 29/09/2026</p>
 
             <p>El Caché 10 Barbershop («nosotros», «nuestro») respeta tu privacidad. Esta política describe qué información recopilamos y cómo la usamos.</p>
 
             <h2>1. Información que recopilamos</h2>
             <ul>
-                <li><strong>Datos de contacto:</strong> nombre, teléfono, email cuando nos contactas por el formulario o por teléfono.</li>
-                <li><strong>Datos de navegación:</strong> dirección IP, tipo de navegador, páginas visitadas y tiempo de acceso, a través de cookies y tecnologías similares.</li>
+                <li><strong>Datos de contacto y de cita:</strong> nombre, teléfono, servicio, barbero, fecha y hora cuando reservas por el formulario (se envía por WhatsApp), por el chat CacheBot, por Booksy o por teléfono.</li>
+                <li><strong>Conversaciones con CacheBot:</strong> el texto que escribes en el chat y un identificador de sesión guardado en tu navegador (sessionStorage) mientras la pestaña está abierta.</li>
+                <li><strong>Datos de navegación:</strong> dirección IP, navegador y páginas visitadas, que reciben el hosting y los terceros de abajo.</li>
             </ul>
 
             <h2>2. Uso de la información</h2>
-            <p>Utilizamos tus datos para: atender solicitudes, gestionar citas, mejorar nuestros servicios y cumplir obligaciones legales.</p>
+            <p>Usamos tus datos para atender solicitudes, gestionar y recordar citas, responder por WhatsApp o teléfono, mejorar el servicio y cumplir obligaciones legales. No vendemos tus datos.</p>
 
-            <h2>3. Publicidad y Google AdSense</h2>
-            <p>Este sitio utiliza Google AdSense para mostrar anuncios. Google y sus partners pueden usar cookies para personalizar anuncios según tu historial de navegación. Puedes gestionar la publicidad personalizada en <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Configuración de anuncios de Google</a>.</p>
-            <p>Los terceros (incluido Google) pueden recopilar información para mostrar anuncios basados en visitas anteriores a este y otros sitios web. Consulta la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidad de Google</a>.</p>
+            <h2>3. Chat CacheBot (inteligencia artificial)</h2>
+            <p>CacheBot es un asistente automático con <strong>inteligencia artificial</strong>, no una persona. Lo que escribes se envía a nuestro servidor de citas (<code>citas.elcache10.com</code>, alojado en Vercel) y a un proveedor de modelos de IA para generar la respuesta: <strong>OpenRouter, Anthropic o Google (Gemini)</strong>, según disponibilidad. Para ver y reservar horarios, el servidor consulta y escribe en el <strong>Google Calendar</strong> de la barbería (nombre, teléfono, servicio y hora de la cita). No escribas en el chat datos sensibles (salud, documentos, datos bancarios). Plazo de conservación de las conversaciones y citas: <strong>[PENDIENTE DATO REAL]</strong>.</p>
 
-            <h2>4. Cookies</h2>
-            <p>Usamos cookies técnicas y de terceros (Google AdSense). Detalles en nuestra <a href="cookies.html">Política de Cookies</a>.</p>
+            <h2>4. Terceros</h2>
+            <ul>
+                <li><strong>Vercel</strong>: alojamiento de www.elcache10.com y citas.elcache10.com.</li>
+                <li><strong>Google AdSense</strong>: anuncios, solo si los aceptas en el banner de cookies; con tu permiso puede personalizarlos. Gestiona la publicidad en la <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Configuración de anuncios de Google</a> y consulta la <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">política de Google</a>.</li>
+                <li><strong>Google Maps</strong>: el mapa de la sección de contacto solo se carga si pulsas «Cargar mapa» o lo aceptas en el banner.</li>
+                <li><strong>Google Fonts</strong>: tipografías del sitio.</li>
+                <li><strong>OpenRouter, Anthropic y Google Gemini</strong>: respuestas del chat CacheBot.</li>
+                <li><strong>Google Calendar</strong>: agenda de citas de la barbería.</li>
+                <li><strong>WhatsApp (Meta)</strong>: si reservas o escribes por WhatsApp, el mensaje lo trata WhatsApp según su política.</li>
+                <li><strong>Booksy</strong>: si reservas en Booksy, rige su propia política.</li>
+                <li><strong>Clerk</strong>: inicio de sesión del panel interno del personal (no de clientes).</li>
+                <li><strong>Instagram (Meta)</strong>: solo si sigues el enlace a nuestro perfil.</li>
+            </ul>
+            <p>No usamos herramientas de analítica.</p>
 
-            <h2>5. Derechos</h2>
+            <h2>5. Cookies</h2>
+            <p>Detalles en la <a href="cookies.html">Política de Cookies</a>. Puedes cambiar tu elección en cualquier momento: <a href="cookies.html#preferencias" data-cookie-prefs>Preferencias de cookies</a>.</p>
+
+            <h2>6. Derechos</h2>
             <p>Puedes solicitar acceso, rectificación o eliminación de tus datos contactando a info@elcache10.com o llamando al (646) 334-9409.</p>
 
-            <h2>6. Seguridad</h2>
+            <h2>7. Seguridad</h2>
             <p>Aplicamos medidas técnicas y organizativas para proteger tus datos.</p>
 
-            <h2>7. Cambios</h2>
+            <h2>8. Cambios</h2>
             <p>Podemos actualizar esta política. La fecha de última modificación figurará al inicio del documento.</p>
 
             <p class="legal-back"><a href="index.html">← Volver al inicio</a></p>
@@ -97,8 +112,10 @@
                     <a href="privacidad.html">Política de Privacidad</a>
                     <span aria-hidden="true">|</span>
                     <a href="cookies.html">Política de Cookies</a>
+                    <span aria-hidden="true">|</span>
+                    <a href="cookies.html#preferencias" data-cookie-prefs>Preferencias de cookies</a>
                 </nav>
-                <p class="footer-update">Última actualización: 15/02/2026</p>
+                <p class="footer-update">Última actualización: 29/09/2026</p>
                 <a href="https://www.instagram.com/elcache10/" target="_blank" rel="noopener noreferrer" class="footer-instagram">@elcache10</a>
             </div>
         </div>
