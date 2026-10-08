@@ -52,7 +52,9 @@ function scanHtmlFiles(dir, baseDir) {
       results.push(...scanHtmlFiles(fullPath, baseDir));
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
       const rel = path.relative(baseDir, fullPath).replace(/\\/g, '/');
-      if (!EXCLUDED.has(rel) && !EXCLUDED.has(entry.name)) {
+      // Las páginas con noindex (vídeos con poco texto) no van al sitemap.
+      const noindex = /<meta name="robots" content="[^"]*noindex/i.test(fs.readFileSync(fullPath, 'utf8'));
+      if (!noindex && !EXCLUDED.has(rel) && !EXCLUDED.has(entry.name)) {
         results.push({ fullPath, rel });
       }
     }
