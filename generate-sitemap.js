@@ -64,7 +64,7 @@ function scanHtmlFiles(dir, baseDir) {
 
 function locFor(rel) {
   if (rel === 'index.html') return `${BASE_URL}/`;
-  if (rel === 'guias/index.html') return `${BASE_URL}/guias/`;
+  if (rel === 'guias/index.html') return `${BASE_URL}/guias`; // /guias/ redirige (308) a /guias
   return `${BASE_URL}/${rel}`;
 }
 
