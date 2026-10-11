@@ -3,7 +3,7 @@ import { assertAdminRequest } from '../admin-request';
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
 
   const hook = process.env.ADMIN_VERCEL_DEPLOY_HOOK_URL;

@@ -42,14 +42,14 @@ async function citas(path: string, init?: RequestInit) {
 }
 
 export async function GET(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
   const result = await citas('/api/staff-admin');
   return Response.json(result.body, { status: result.ok ? 200 : result.status });
 }
 
 export async function POST(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
   const payload = await request.json().catch(() => ({}));
   const result = await citas('/api/staff-admin', { method: 'POST', body: JSON.stringify(payload) });
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
   const payload = await request.json().catch(() => ({}));
   const result = await citas('/api/staff-admin', { method: 'PATCH', body: JSON.stringify(payload) });
@@ -65,7 +65,7 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
   const id = new URL(request.url).searchParams.get('id') || '';
   const result = await citas(`/api/staff-admin?id=${encodeURIComponent(id)}`, { method: 'DELETE' });

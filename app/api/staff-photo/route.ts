@@ -1,4 +1,5 @@
-import { auth } from '@clerk/nextjs/server';
+import { timingSafeEqual } from 'node:crypto';
+import { getAdminAccess } from '../../../lib/admin-auth';
 import { assertAdminRequest } from '../../../lib/admin-request.mjs';
 import {
   allowStaffPhotoWrite,
@@ -17,9 +18,9 @@ function clientIp(request: Request) {
 }
 
 function syncKeyOk(request: Request) {
-  const expected = (process.env.STAFF_ROSTER_SYNC_KEY || '').trim();
-  const got = (request.headers.get('x-staff-sync-key') || '').trim();
-  return expected.length >= 16 && got === expected;
+  const expected = Buffer.from((process.env.STAFF_ROSTER_SYNC_KEY || '').trim());
+  const got = Buffer.from((request.headers.get('x-staff-sync-key') || '').trim());
+  return expected.length >= 16 && got.length === expected.length && timingSafeEqual(got, expected);
 }
 
 async function githubJson(method: string, url: string, token: string, body?: unknown) {
@@ -52,20 +53,14 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  // Entra la clave máquina-a-máquina (citas → www) o un administrador de la lista blanca.
   if (!syncKeyOk(request)) {
     const forbidden = assertAdminRequest(request);
     if (forbidden) return forbidden;
-  }
-
-  let userId: string | null = null;
-  try {
-    const session = await auth();
-    userId = session.userId;
-  } catch {
-    userId = null;
-  }
-  if (!userId && !syncKeyOk(request)) {
-    return Response.json({ error: 'unauthorized' }, { status: 401 });
+    const access = await getAdminAccess('/api/staff-photo');
+    if (!access.allowed) {
+      return Response.json({ error: 'unauthorized' }, { status: access.reason === 'sin_sesion' ? 401 : 403 });
+    }
   }
 
   if (!allowStaffPhotoWrite(clientIp(request))) {

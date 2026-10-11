@@ -1,4 +1,4 @@
-import { SignInButton, SignUpButton, Show, UserButton } from '@clerk/nextjs';
+import { SignInButton, Show, UserButton } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -22,7 +22,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/">Public site</Link>
           <Show when="signed-out">
             <SignInButton forceRedirectUrl="/admin" />
-            <SignUpButton forceRedirectUrl="/admin" />
           </Show>
           <Show when="signed-in">
             <UserButton />

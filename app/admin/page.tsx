@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import AdminDashboard from './AdminDashboard';
 import type { JsonDoc, Offer, ServiceItem } from './AdminDashboard';
 import { buildAdminRedirectUrl } from '../../lib/admin-host.mjs';
+import { getAdminAccess } from '../../lib/admin-auth';
 
 async function readDataJson<T>(filename: string): Promise<T> {
   const rawUrl = `https://raw.githubusercontent.com/AminVentura/ELCache10/main/data/${filename}`;
@@ -50,6 +51,12 @@ export default async function AdminPage() {
   const adminRedirectUrl = buildAdminRedirectUrl(`${protocol}://${host}/admin`);
   if (adminRedirectUrl) {
     redirect(String(adminRedirectUrl));
+  }
+
+  // Defensa en profundidad: la página no confía solo en el proxy.
+  const access = await getAdminAccess('página /admin');
+  if (!access.allowed) {
+    redirect(access.reason === 'sin_sesion' ? '/sign-in' : '/sin-acceso');
   }
 
   const [offersDoc, servicesDoc] = await Promise.all([

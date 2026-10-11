@@ -65,7 +65,7 @@ async function githubJson(method: string, url: string, token: string, body?: unk
 }
 
 export async function POST(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
 
   const token = process.env.ADMIN_GITHUB_TOKEN;

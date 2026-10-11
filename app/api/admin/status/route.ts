@@ -3,7 +3,7 @@ import { assertAdminRequest } from '../admin-request';
 export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
-  const forbidden = assertAdminRequest(request);
+  const forbidden = await assertAdminRequest(request);
   if (forbidden) return forbidden;
 
   return Response.json({
