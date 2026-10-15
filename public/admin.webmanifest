@@ -1,0 +1,19 @@
+{
+  "id": "/admin",
+  "name": "El Caché 10 · Administración",
+  "short_name": "Caché Admin",
+  "description": "Panel privado de El Caché 10 para precios, ofertas y equipo.",
+  "lang": "es",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f2e5",
+  "theme_color": "#070707",
+  "icons": [
+    { "src": "/images/admin-pwa/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/admin-pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/images/admin-pwa/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/images/admin-pwa/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

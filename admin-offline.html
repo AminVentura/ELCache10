@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#070707" />
+    <link rel="manifest" href="/admin.webmanifest" />
+    <link rel="apple-touch-icon" href="/images/admin-pwa/apple-touch-icon.png" />
+    <title>Sin conexión · Caché Admin</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        box-sizing: border-box;
+        color: #11100c;
+        background: linear-gradient(135deg, #f7f2e5 0%, #f4f4ef 48%, #e7e0cf 100%);
+        font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+      }
+      main {
+        max-width: 28rem;
+        padding: 1.5rem;
+        border: 1px solid #e6dfcf;
+        border-radius: 22px;
+        background: #ffffff;
+        text-align: center;
+        box-shadow: 0 18px 54px rgba(7, 7, 7, 0.16);
+      }
+      h1 { margin: 0 0 0.5rem; font-size: 1.4rem; }
+      p { margin: 0.5rem 0; line-height: 1.45; color: #374151; }
+      button {
+        margin-top: 1rem;
+        min-height: 44px;
+        padding: 0 1.25rem;
+        border: 0;
+        border-radius: 12px;
+        background: #070707;
+        color: #d4af37;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Sin conexión</h1>
+      <p>El panel de administración necesita internet para mostrar y guardar precios, ofertas y equipo.</p>
+      <p>No se muestran datos guardados. Cuando vuelva la conexión, la página se recarga sola.</p>
+      <button type="button" onclick="location.reload()">Reintentar</button>
+    </main>
+    <script>
+      window.addEventListener('online', function () { location.reload(); });
+    </script>
+  </body>
+</html>

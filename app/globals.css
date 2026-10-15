@@ -264,3 +264,36 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* PWA del panel /admin (2026-10-15): sin red, el panel se tapa con el aviso (app/admin/PanelPwa.tsx). */
+body.panel-sin-red .app-header,
+body.panel-sin-red .admin-shell {
+  display: none !important;
+}
+.panel-sin-red__aviso {
+  max-width: 28rem;
+  margin: 15vh auto 0;
+  padding: 1.5rem;
+  border: 1px solid #e6dfcf;
+  border-radius: 22px;
+  background: #ffffff;
+  color: #11100c;
+  text-align: center;
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+}
+.panel-sin-red__aviso h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+.panel-sin-red__aviso button {
+  margin-top: 1rem;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 12px;
+  background: #070707;
+  color: #d4af37;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}

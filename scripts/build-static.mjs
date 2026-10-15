@@ -14,6 +14,10 @@ const STATIC_ENTRIES = [
   'watch',
   'guias',
   'ads.txt',
+  // PWA del panel /admin (2026-10-15): manifiesto, service worker y aviso sin conexión.
+  'admin.webmanifest',
+  'admin-sw.js',
+  'admin-offline.html',
   'aviso-legal.html',
   'cookies.html',
   'favicon.ico',
