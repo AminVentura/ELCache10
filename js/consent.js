@@ -4,7 +4,8 @@
  * - Cargar lo antes posible: en index.html va síncrono en <head>; en app/page.tsx con next/script.
  *   Ningún otro código carga etiquetas de Google, así que el orden es seguro en ambos casos.
  * - Por defecto todo denegado (ad_storage, ad_user_data, ad_personalization, analytics_storage).
- * - AdSense no está en el HTML: loadAdSense() lo inyecta solo si el usuario acepta publicidad.
+ * - El <script> de AdSense va en el HTML (el rastreador no ejecuta este archivo).
+ *   consent default queda denegado antes de ese script. loadAdSense() no lo duplica.
  * - Google Maps: [data-map-embed] muestra un placeholder; el iframe se crea al pulsar
  *   "Cargar mapa" (solo esa visita) o si el usuario aceptó "Mapas" en el banner.
  * - Banner con Aceptar / Rechazar del mismo peso y Configurar. [data-cookie-prefs] lo reabre.
@@ -62,12 +63,16 @@
   var current = readPrefs();
   if (current) applyConsent(current);
 
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (!current || !current.personalization) window.adsbygoogle.requestNonPersonalizedAds = 1;
+
   var adsenseRequested = false;
   function loadAdSense() {
     if (adsenseRequested || !current || !current.ads) return;
     adsenseRequested = true;
     window.adsbygoogle = window.adsbygoogle || [];
     if (!current.personalization) window.adsbygoogle.requestNonPersonalizedAds = 1;
+    if (document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) return;
     var s = document.createElement('script');
     s.async = true;
     s.crossOrigin = 'anonymous';

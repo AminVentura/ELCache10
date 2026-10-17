@@ -91,10 +91,15 @@ export default async function Page() {
 
   return (
     <>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8721021745606812"
+        crossOrigin="anonymous"
+      />
       <link rel="stylesheet" href="/css/style.css" />
       {jsonLd ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} /> : null}
       <div dangerouslySetInnerHTML={{ __html: body }} />
-      {/* 2026-09-29: AdSense y Google Maps solo tras consentimiento (Consent Mode v2). consent.js inyecta adsbygoogle.js si el usuario acepta. */}
+      {/* El script de AdSense está en el HTML de arriba. consent.js no lo duplica y solo activa huecos tras aceptar. */}
       <Script src="/js/consent.js" strategy="afterInteractive" />
       <Script src="/js/main.js" strategy="afterInteractive" />
       <Script src="/js/cachebot-widget.js" strategy="afterInteractive" />

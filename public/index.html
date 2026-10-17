@@ -20,8 +20,9 @@
         window.location.replace('/admin');
     }
     </script>
-    <!-- 2026-09-29: AdSense y el mapa de Google se cargan solo tras consentimiento (Consent Mode v2). Ver js/consent.js. -->
+    <!-- Consent Mode v2 denegado por defecto, y después el script que el rastreador de AdSense tiene que ver en el HTML. -->
     <script src="/js/consent.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8721021745606812" crossorigin="anonymous"></script>
     <link rel="canonical" href="https://elcache10.com/">
     <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
     <link rel="icon" href="images/favicon.png" type="image/png" sizes="192x192">
