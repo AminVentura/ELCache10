@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import { injectPublicFaqPrices, injectPublicOffersHtml, injectPublicServicesHtml, injectPublicStaffOptionsHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicStaffOptionsHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
 
 const ADSENSE_ACCOUNT = 'ca-pub-8721021745606812';
+const ADSENSE_TAG = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ACCOUNT}" crossorigin="anonymous"></script>`;
 
 export const metadata: Metadata = {
   title: 'El Cache 10 Barbershop Bronx NY | Dominican Barber Shop & Nail Services',
@@ -91,15 +92,12 @@ export default async function Page() {
 
   return (
     <>
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8721021745606812"
-        crossOrigin="anonymous"
-      />
       <link rel="stylesheet" href="/css/style.css" />
       {jsonLd ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} /> : null}
-      <div dangerouslySetInnerHTML={{ __html: body }} />
-      {/* El script de AdSense está en el HTML de arriba. consent.js no lo duplica y solo activa huecos tras aceptar. */}
+      {/* AdSense va como HTML crudo al inicio del <body>: un <script async> de React 19 se sube al <head>
+          ANTES del default de consentimiento de app/layout.tsx. Así el parser ejecuta primero el default
+          (inline en <head>) y después encuentra este script. consent.js no lo duplica. */}
+      <div dangerouslySetInnerHTML={{ __html: ADSENSE_TAG + body }} />
       <Script src="/js/consent.js" strategy="afterInteractive" />
       <Script src="/js/main.js" strategy="afterInteractive" />
       <Script src="/js/cachebot-widget.js" strategy="afterInteractive" />
