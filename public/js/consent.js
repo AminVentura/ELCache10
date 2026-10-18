@@ -1,10 +1,11 @@
 /*
  * Consentimiento de cookies + Google Consent Mode v2 — elcache10.com (2026-09-29)
  *
- * - Cargar lo antes posible: en index.html va síncrono en <head>; en app/page.tsx con next/script.
- *   Ningún otro código carga etiquetas de Google, así que el orden es seguro en ambos casos.
+ * - El default denegado va INLINE como primer script del <head> (bs-consent-default) en cada página con
+ *   AdSense, y en app/layout.tsx para la portada. Este archivo solo lo repite si ese bloque falta.
  * - Por defecto todo denegado (ad_storage, ad_user_data, ad_personalization, analytics_storage).
- * - El <script> de AdSense va en el HTML (el rastreador no ejecuta este archivo).
+ * - El <script> de AdSense va en el HTML (el rastreador no ejecuta este archivo), siempre DESPUÉS
+ *   del bloque inline bs-consent-default del <head> (tests/consent-order.test.mjs).
  *   consent default queda denegado antes de ese script. loadAdSense() no lo duplica.
  * - Google Maps: [data-map-embed] muestra un placeholder; el iframe se crea al pulsar
  *   "Cargar mapa" (solo esa visita) o si el usuario aceptó "Mapas" en el banner.
@@ -24,14 +25,18 @@
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = window.gtag || gtag;
 
-  gtag('consent', 'default', {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    analytics_storage: 'denied',
-    wait_for_update: 500
-  });
-  gtag('set', 'ads_data_redaction', true);
+  // Solo si la página no trae el bloque inline bs-consent-default (evita un segundo "default").
+  if (!window.bsConsentDefault) {
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied',
+      wait_for_update: 500
+    });
+    gtag('set', 'ads_data_redaction', true);
+    window.bsConsentDefault = true;
+  }
 
   function readPrefs() {
     try {
