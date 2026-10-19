@@ -30,7 +30,8 @@ jobs:
           # Una entrada por carpeta con package.json + package-lock.json.
           #   dir:      carpeta (". " para la raíz)
           #   node:     versión de Node (la de "engines" o la del hosting)
-          #   scripts:  scripts de package.json, en orden (lint, typecheck, test, build...)
+          #   scripts:  scripts de package.json, en orden (lint, typecheck, test, build...);
+          #             "ws:build" = npm run build en todos los workspaces que lo tengan
           #   emulador: 'firestore' si los tests usan el emulador de Firestore
           - dir: .
             node: '24'
@@ -49,10 +50,17 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-          cache-dependency-path: ${{ matrix.dir }}/package-lock.json
+          cache-dependency-path: ${{ matrix.dir }}/package*.json
 
       - name: Instalar (npm ci)
-        run: npm ci --no-audit --no-fund
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            echo "::warning title=Sin package-lock.json::${{ matrix.dir }} no tiene lockfile; se usa npm install (instalación no reproducible). Versionar package-lock.json."
+            npm install --no-audit --no-fund
+          fi
 
       - name: Java para el emulador de Firestore
         if: matrix.emulador != ''
@@ -67,7 +75,9 @@ jobs:
           set -euo pipefail
           for s in ${{ matrix.scripts }}; do
             echo "::group::npm run $s"
-            if [ -n "${{ matrix.emulador }}" ] && [ "$s" = "test" ]; then
+            if [ "${s#ws:}" != "$s" ]; then
+              npm run "${s#ws:}" --workspaces --if-present
+            elif [ -n "${{ matrix.emulador }}" ] && [ "$s" = "test" ]; then
               npx --yes firebase-tools@15.34.0 emulators:exec --only ${{ matrix.emulador }} --project demo-ci "npm run test"
             else
               npm run "$s"
@@ -79,7 +89,10 @@ jobs:
         run: node "$GITHUB_WORKSPACE/.github/scripts/licencias.mjs" .
 
       - name: npm audit (críticas)
-        run: npm audit --audit-level=critical
+        shell: bash
+        run: |
+          if [ ! -f package-lock.json ]; then npm i --package-lock-only --no-audit --no-fund >/dev/null; fi
+          npm audit --audit-level=critical
 
   ci-ok:
     # Un solo check para la protección de rama, aunque cambie la matriz.
