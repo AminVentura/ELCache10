@@ -1,1 +1,10 @@
-{ "excepciones": [] }
+{
+  "excepciones": [
+    {
+      "paquete": "@img/sharp-*",
+      "licencia": "LGPL-3.0-or-later",
+      "aprobado": "2026-10-19",
+      "motivo": "Binarios opcionales de sharp (@img/sharp-libvips-* en Linux, @img/sharp-win32-* en Windows, con libvips dentro) que instala next para optimizar imágenes. Se enlaza dinámicamente y no se modifica. Excepción aprobada por Amin para los proyectos Next.js."
+    }
+  ]
+}
