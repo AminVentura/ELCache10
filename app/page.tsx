@@ -16,6 +16,32 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://elcache10.com/',
   },
+  // Open Graph (2026-10-19): portada al compartir el enlace. Imagen de 1200x630 en images/og-portada.jpg.
+  openGraph: {
+    type: 'website',
+    siteName: 'El Caché 10 Barbershop',
+    locale: 'en_US',
+    url: 'https://elcache10.com/',
+    title: 'El Cache 10 Barbershop Bronx NY | Dominican Barber Shop & Nail Services',
+    description:
+      'Dominican barbershop in the Bronx offering haircuts, fades, nail services and La Nacional money transfers.',
+    images: [
+      {
+        url: 'https://elcache10.com/images/og-portada.jpg',
+        type: 'image/jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'El Caché 10 Barbershop storefront at 1942 Harrison Ave, Bronx, NY',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'El Cache 10 Barbershop Bronx NY | Dominican Barber Shop & Nail Services',
+    description:
+      'Dominican barbershop in the Bronx offering haircuts, fades, nail services and La Nacional money transfers.',
+    images: [{ url: 'https://elcache10.com/images/og-portada.jpg', alt: 'El Caché 10 Barbershop storefront at 1942 Harrison Ave, Bronx, NY' }],
+  },
   robots: {
     index: true,
     follow: true,
