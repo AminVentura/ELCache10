@@ -1,0 +1,45 @@
+{
+  "apphosting": [
+    {
+      "backendId": "elcache-web",
+      "rootDir": ".",
+      "ignore": [
+        "node_modules",
+        ".git",
+        ".next",
+        "_ARCHIVO",
+        "docs",
+        ".env",
+        ".env.*",
+        ".cursor",
+        ".claude"
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "target": "web",
+      "public": "public",
+      "cleanUrls": false,
+      "ignore": [
+        "firebase.json",
+        "**/.*"
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

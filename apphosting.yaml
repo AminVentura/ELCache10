@@ -1,0 +1,42 @@
+# Firebase App Hosting — ElCache10 (elcache10.com, www.elcache10.com y admin.elcache10.com).
+# Proyecto: chatbot-citas-elcache10 (ya en Blaze). Backend: elcache-web. Preparado el 2026-10-25, SIN desplegar.
+# Guía: docs/HOSTING-FIREBASE-2026-10-25.md. Formato: https://firebase.google.com/docs/app-hosting/configure
+#
+# Nada siempre encendido: minInstances 0. Ningún secreto en este archivo: los «secret:» son NOMBRES de
+# Secret Manager, creados con
+#   npx firebase-tools@15.34.0 apphosting:secrets:set NOMBRE --project chatbot-citas-elcache10
+# Si un secreto referenciado no existe, el build falla.
+
+runConfig:
+  minInstances: 0
+  maxInstances: 2
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 512
+
+env:
+  # --- Configuración (no son secretos; el código ya trae estos valores por defecto) ---
+  - variable: ADMIN_GITHUB_REPO
+    value: AminVentura/ELCache10
+  - variable: ADMIN_GITHUB_BRANCH
+    value: main
+
+  # --- Clerk (panel /admin). La clave publicable se usa también en el build. ---
+  - variable: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+    secret: clerk-publishable-key
+  - variable: CLERK_SECRET_KEY
+    secret: clerk-secret-key
+    availability: [RUNTIME]
+  - variable: ADMIN_ALLOWED_EMAILS
+    secret: admin-allowed-emails
+    availability: [RUNTIME]
+  # Guardado de precios, ofertas y fotos en GitHub
+  - variable: ADMIN_GITHUB_TOKEN
+    secret: admin-github-token
+    availability: [RUNTIME]
+  # citas.elcache10.com → www.elcache10.com/api/staff-photo (clave entre servidores; la misma en los dos)
+  - variable: STAFF_ROSTER_SYNC_KEY
+    secret: staff-roster-sync-key
+    availability: [RUNTIME]
+  # ADMIN_VERCEL_DEPLOY_HOOK_URL no hace falta en Firebase: con el backend conectado a GitHub (rama main),
+  # cada guardado del panel (commit en GitHub) publica solo. Sin el hook, /api/admin/status dice «no configurado».

@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "chatbot-citas-elcache10"
+  },
+  "targets": {
+    "chatbot-citas-elcache10": {
+      "hosting": {
+        "web": [
+          "elcache10-web"
+        ]
+      }
+    }
+  }
+}

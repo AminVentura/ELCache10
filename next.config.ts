@@ -1,4 +1,8 @@
 import type { NextConfig } from 'next';
+import { datosBuild } from './lib/version-sitio.mjs';
+
+// Pie con versión y fecha (lib/version-sitio.mjs): una sola fuente para la portada y las páginas .html.
+const build = datosBuild();
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -49,11 +53,22 @@ function contentSecurityPolicy() {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  env: {
+    NEXT_PUBLIC_APP_VERSION: build.version,
+    NEXT_PUBLIC_BUILD_DATE: build.fecha,
+  },
   async redirects() {
     // Sin registro abierto: /sign-up ya no existe y manda al inicio de sesión.
     return [
       { source: '/sign-up', destination: '/sign-in', permanent: false },
       { source: '/sign-up/:path*', destination: '/sign-in', permanent: false },
+      // www → dominio principal. En Vercel también lo hace vercel.json; aquí para que valga en Firebase App Hosting.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.elcache10.com' }],
+        destination: 'https://elcache10.com/:path*',
+        permanent: true,
+      },
     ];
   },
   async headers() {

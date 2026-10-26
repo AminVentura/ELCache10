@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import Script from 'next/script';
 import type { Metadata } from 'next';
 import { injectPublicFaqPrices, injectPublicOffersHtml, injectPublicServicesHtml, injectPublicStaffOptionsHtml, injectPublicTeamHtml, renderPublicOffersHtml, renderPublicStaffOptionsHtml, renderPublicTeamHtml } from '../lib/static-data.mjs';
+import { ponerVersionSitio, textoVersion } from '../lib/version-sitio.mjs';
 
 const ADSENSE_ACCOUNT = 'ca-pub-8721021745606812';
 const ADSENSE_TAG = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ACCOUNT}" crossorigin="anonymous"></script>`;
@@ -85,7 +86,10 @@ export default async function Page() {
     redirect('/admin');
   }
 
-  const html = await fs.readFile(path.join(process.cwd(), 'index.html'), 'utf8');
+  const html = ponerVersionSitio(
+    await fs.readFile(path.join(process.cwd(), 'index.html'), 'utf8'),
+    textoVersion(process.env.NEXT_PUBLIC_APP_VERSION, process.env.NEXT_PUBLIC_BUILD_DATE)
+  );
   const [offersDoc, servicesDoc] = await Promise.all([
     readLiveJson('ofertas.json'),
     readLiveJson('servicios.json'),
