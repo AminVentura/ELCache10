@@ -1,0 +1,169 @@
+{
+  "hosting": [
+    {
+      "target": "elcache10",
+      "public": "public",
+      "cleanUrls": false,
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+        {
+          "source": "/admin",
+          "destination": "https://admin.elcache10.com/admin",
+          "type": 302
+        },
+        {
+          "source": "/admin/**",
+          "destination": "https://admin.elcache10.com/admin",
+          "type": 302
+        },
+        {
+          "source": "/sign-in",
+          "destination": "https://admin.elcache10.com/sign-in",
+          "type": 302
+        },
+        {
+          "source": "/sign-in/**",
+          "destination": "https://admin.elcache10.com/sign-in",
+          "type": 302
+        },
+        {
+          "source": "/sign-up",
+          "destination": "https://admin.elcache10.com/sign-in",
+          "type": 302
+        },
+        {
+          "source": "/favicon.ico",
+          "destination": "/images/favicon-32.png",
+          "type": 301
+        }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "Permissions-Policy",
+              "value": "camera=(self), microphone=(), geolocation=()"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://clerk.elcache10.com https://accounts.elcache10.com https://challenges.cloudflare.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.googletagservices.com https://fundingchoicesmessages.google.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://citas.elcache10.com https://raw.githubusercontent.com https://*.clerk.accounts.dev https://clerk.elcache10.com https://accounts.elcache10.com https://clerk-telemetry.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://www.googletagservices.com https://fundingchoicesmessages.google.com https://www.google.com https://*.google.com; frame-src 'self' https://maps.google.com https://www.google.com https://*.googlesyndication.com https://*.doubleclick.net https://*.adtrafficquality.google https://challenges.cloudflare.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+            }
+          ]
+        },
+        {
+          "source": "/ads.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            }
+          ]
+        },
+        {
+          "source": "/admin-sw.js",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/javascript; charset=utf-8"
+            }
+          ]
+        },
+        {
+          "source": "/data/**",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=60, stale-while-revalidate=300"
+            }
+          ]
+        },
+        {
+          "source": "/api/**",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow, noarchive"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            }
+          ]
+        },
+        {
+          "source": "/admin-offline.html",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, nofollow"
+            }
+          ]
+        },
+        {
+          "source": "/404.html",
+          "headers": [
+            {
+              "key": "X-Robots-Tag",
+              "value": "noindex, follow"
+            }
+          ]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/sitemap.xml",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/xml; charset=utf-8"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

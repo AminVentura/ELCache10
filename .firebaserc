@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "elcache10-app"
+  },
+  "targets": {
+    "elcache10-app": {
+      "hosting": {
+        "elcache10": [
+          "elcache10-app"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -12,3 +12,5 @@ _docs_check.txt
 _ARCHIVO/
 docs/AUDITORIA-LANZAMIENTO-2026-09-29.md
 docs/SRS.md
+.firebase
+firebase-debug.log

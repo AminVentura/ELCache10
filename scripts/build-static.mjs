@@ -21,6 +21,9 @@ const STATIC_ENTRIES = [
   'aviso-legal.html',
   'cookies.html',
   'favicon.ico',
+  // Firebase Hosting (2026-10-26): página 404 propia y manifiesto (antes caían en la portada).
+  '404.html',
+  'site.webmanifest',
   'index.html',
   'privacidad.html',
   'robots.txt',

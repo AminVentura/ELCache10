@@ -1,0 +1,120 @@
+# Publica la web pública (elcache10.com y www) en Firebase Hosting: proyecto elcache10-app,
+# sitio elcache10-app, target "elcache10" (.firebaserc). Lo de Vercel (admin.elcache10.com) no se toca.
+#
+# Cuándo corre:
+#   - cada push a main (incluidos los commits del panel y de la cámara de sillas);
+#   - a mano (Actions -> Publicar web (Firebase) -> Run workflow) o con el botón «Refrescar web»
+#     de citas.elcache10.com (workflow_dispatch vía la API de GitHub).
+#
+# APAGADO hasta que Amin lo configure: si la variable de repositorio FIREBASE_DEPLOY_ENABLED no vale
+# "true", el job "publicar" se salta y el job "aviso" deja una nota (verde, no rojo).
+#
+# Acceso a Google Cloud, en orden de preferencia (ver docs/REFRESCAR-WEB-2026-10-26.md):
+#   1) Workload Identity Federation, sin clave JSON. Variables de repositorio:
+#        GCP_WORKLOAD_IDENTITY_PROVIDER  projects/<número>/locations/global/workloadIdentityPools/<pool>/providers/<proveedor>
+#        GCP_SERVICE_ACCOUNT             <cuenta>@elcache10-app.iam.gserviceaccount.com
+#   2) Si no se puede: secreto de repositorio FIREBASE_SERVICE_ACCOUNT_ELCACHE10_APP (JSON de una
+#      cuenta de servicio con rol Firebase Hosting Admin). Lo pone Amin; nunca va en el código.
+name: Publicar web (Firebase)
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  workflow_dispatch:
+    inputs:
+      motivo:
+        description: 'Quién o qué pide la publicación (sin datos personales)'
+        required: false
+        default: 'manual'
+
+permissions:
+  contents: read
+
+concurrency:
+  # Una publicación a la vez; la siguiente espera (no se cancela la que va por la mitad).
+  group: firebase-hosting-elcache10
+  cancel-in-progress: false
+
+jobs:
+  aviso:
+    if: vars.FIREBASE_DEPLOY_ENABLED != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Publicación apagada
+        run: |
+          echo "::notice title=Publicación a Firebase apagada::Falta la variable de repositorio FIREBASE_DEPLOY_ENABLED=true y el acceso a Google (WIF o secreto). Ver docs/REFRESCAR-WEB-2026-10-26.md"
+          {
+            echo "### Publicación a Firebase apagada"
+            echo ""
+            echo "No se publicó nada. Para encenderla: docs/REFRESCAR-WEB-2026-10-26.md"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  publicar:
+    if: vars.FIREBASE_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # solo para Workload Identity Federation
+    env:
+      FIREBASE_TOOLS: firebase-tools@15.34.0
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Pruebas (node --test, sin dependencias)
+        run: npm test
+
+      - name: Generar public/ (sitemap y copia estática)
+        run: |
+          node generate-sitemap.js
+          node scripts/build-static.mjs
+          test -f public/index.html && test -f public/ads.txt && test -f public/404.html
+
+      - name: Acceso a Google con Workload Identity Federation
+        if: vars.GCP_WORKLOAD_IDENTITY_PROVIDER != ''
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - name: Acceso a Google con el secreto de cuenta de servicio
+        if: vars.GCP_WORKLOAD_IDENTITY_PROVIDER == ''
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ELCACHE10_APP }}
+        run: |
+          if [ -z "$SA_JSON" ]; then
+            echo "::error title=Falta el acceso a Google::Pon GCP_WORKLOAD_IDENTITY_PROVIDER + GCP_SERVICE_ACCOUNT (variables) o el secreto FIREBASE_SERVICE_ACCOUNT_ELCACHE10_APP."
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+
+      - name: Publicar en Firebase Hosting
+        run: |
+          npx --yes "$FIREBASE_TOOLS" deploy --only hosting:elcache10 --project elcache10-app \
+            --non-interactive -m "GitHub ${GITHUB_SHA::7} (${{ github.event_name }})"
+
+      - name: Comprobar la web publicada
+        run: |
+          for u in https://elcache10-app.web.app/ https://elcache10-app.web.app/ads.txt https://elcache10-app.web.app/sitemap.xml; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$u")
+            echo "$code $u"
+            [ "$code" = "200" ] || exit 1
+          done
+          code=$(curl -s -o /dev/null -w '%{http_code}' https://elcache10-app.web.app/no-existe-ci)
+          echo "$code /no-existe-ci (debe ser 404)"
+          [ "$code" = "404" ] || echo "::warning::La página inexistente no dio 404 ($code)."
+          echo "Publicado ${GITHUB_SHA::7} en elcache10.com" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Borrar la clave temporal
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
