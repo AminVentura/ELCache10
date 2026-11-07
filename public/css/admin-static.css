@@ -358,15 +358,18 @@ td label {
   grid-column: 1 / -1;
 }
 
+/* Formularios ola 2 (2026-11-04): panel del personal en versión densa — 48 px, letra 16 (sin zoom en iPhone), radio 16. */
 input,
 textarea,
 select {
   width: 100%;
+  min-height: 48px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 0.75rem 0.85rem;
   color: var(--ink);
   background: #fff;
+  font-size: 16px;
 }
 
 input[type="checkbox"] {
