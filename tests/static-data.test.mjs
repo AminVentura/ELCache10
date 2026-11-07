@@ -177,7 +177,7 @@ test('injectPublicServicesHtml replaces public prices from servicios payload', (
   assert.match(injected, /Dominican Style Haircuts<\/span><span class="spl-price">\$20/);
   assert.match(injected, /Fade<\/span><span class="spl-price">\$35/);
   assert.doesNotMatch(injected, /\$25/);
-  assert.match(injected, /La Nacional Money Transfers<\/span><span class="spl-price">Ask for price/);
+  assert.match(injected, /La Nacional Money Transfers<\/span><span class="spl-price spl-ask">Ask for price/); // 2026-11-04: como en el HTML publicado
 });
 
 test('getActiveOffers filters unpublished and expired offers using RD dates', () => {
@@ -302,4 +302,19 @@ test('validators reject malformed offer and service payloads', () => {
       }),
     /centavos/
   );
+});
+
+// 2026-11-04: precios en un solo lugar (data/servicios.json, lo que guarda el panel de precios).
+test('portada: los precios de index.html salen de data/servicios.json', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { aplicarPreciosPortada, formatPriceFromCents } = await import('../lib/static-data.mjs');
+  const servicios = JSON.parse(readFileSync(new URL('../data/servicios.json', import.meta.url), 'utf8'));
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.equal(aplicarPreciosPortada(html, servicios), html, 'index.html ya está al día con servicios.json (npm run build:static lo regenera)');
+  for (const s of servicios.servicios.filter((x) => x.disponible && Number.isInteger(x.precio_centavos))) {
+    assert.ok(html.includes(`<span>${s.nombre.replace('&', '&amp;')}</span><span class="spl-price">${formatPriceFromCents(s.precio_centavos)}</span>`), s.id);
+  }
+  const viejo = html.replace(/<span class="spl-price">\$40<\/span>/, '<span class="spl-price">$35</span>');
+  assert.notEqual(aplicarPreciosPortada(viejo, servicios), viejo, 'un precio escrito a mano se corrige al publicar');
+  assert.match(readFileSync(new URL('../scripts/build-static.mjs', import.meta.url), 'utf8'), /aplicarPreciosPortada/);
 });

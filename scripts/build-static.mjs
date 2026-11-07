@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -38,6 +38,17 @@ for (const entry of STATIC_ENTRIES) {
   if (!existsSync(source)) continue;
   cpSync(source, path.join(output, entry), { recursive: true });
 }
+
+// Precios en un solo lugar (2026-11-04): la portada toma los de data/servicios.json (lo que guarda el panel de precios).
+// Se escribe también en el index.html de la raíz para que el repo y la web publicada digan lo mismo.
+const { aplicarPreciosPortada } = await import('../lib/static-data.mjs');
+const servicios = JSON.parse(readFileSync(path.join(root, 'data', 'servicios.json'), 'utf8'));
+for (const destino of [path.join(root, 'index.html'), path.join(output, 'index.html')]) {
+  const antes = readFileSync(destino, 'utf8');
+  const despues = aplicarPreciosPortada(antes, servicios);
+  if (despues !== antes) writeFileSync(destino, despues);
+}
+console.log('✅ Precios de la portada tomados de data/servicios.json.');
 
 const generated = readdirSync(output).sort();
 console.log(`✅ public/ generado con ${generated.length} entradas estáticas.`);

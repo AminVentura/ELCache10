@@ -64,6 +64,47 @@ function refreshBookingStaffSelect() {
   }
 }
 
+/**
+ * Campos del formulario «Reservar con…» (2026-11-04). Antes el equipo en vivo pintaba el formulario sin campos y
+ * al enviar solo salía «Completa todos los campos». Mismo HTML que las tarjetas de index.html (etiqueta flotante).
+ * Solo abre WhatsApp: no se guarda nada en el servidor, por eso basta el aviso corto con enlace a Privacidad.
+ */
+function barberBookingFieldsHtml(name) {
+  const id = `bb-${String(name).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+  return `<div class="booking-field cf cf--fija">
+      <select class="cf__input" id="${id}-service" name="service" required>
+        <option value="">Seleccione el servicio</option>
+        <option value="Corte">Corte</option>
+        <option value="Fade">Fade</option>
+        <option value="Barba">Barba</option>
+        <option value="Corte + Barba">Corte + Barba</option>
+        <option value="Secado de pelo">Secado de pelo</option>
+        <option value="Manicure">Manicure</option>
+        <option value="Pedicure">Pedicure</option>
+        <option value="Acrylic">Acrylic</option>
+      </select>
+      <label for="${id}-service" class="cf__label">Tipo de servicio *</label>
+    </div>
+    <div class="booking-field cf cf--fija">
+      <input class="cf__input" placeholder=" " id="${id}-date" type="date" name="date" required>
+      <label for="${id}-date" class="cf__label">Fecha *</label>
+    </div>
+    <div class="booking-field cf cf--fija">
+      <input class="cf__input" placeholder=" " id="${id}-time" type="time" name="time" required>
+      <label for="${id}-time" class="cf__label">Hora preferida *</label>
+    </div>
+    <div class="booking-field cf">
+      <input class="cf__input" placeholder=" " autocomplete="name" autocapitalize="words" enterkeyhint="next" maxlength="60" id="${id}-plate" type="text" name="plate" required>
+      <label for="${id}-plate" class="cf__label">Nombre del cliente *</label>
+    </div>
+    <div class="booking-field cf">
+      <textarea class="cf__input" placeholder=" " enterkeyhint="done" maxlength="300" id="${id}-vehicle" name="vehicle" rows="2" required></textarea>
+      <label for="${id}-vehicle" class="cf__label">Descripción *</label>
+      <span class="booking-field-hint cf__ayuda">Ej: Fade bajo con barba perfilada</span>
+    </div>
+    <p class="booking-privacy-note">Al enviar se abre WhatsApp con tu mensaje. Esta web no guarda tus datos. <a href="privacidad.html">Privacidad</a></p>`;
+}
+
 function applyLiveTeam(staff) {
   liveStaffRoster = Array.isArray(staff) ? staff : [];
   refreshBookingStaffSelect();
@@ -90,6 +131,7 @@ function applyLiveTeam(staff) {
             <button type="button" class="btn btn-primary barber-booking-toggle">Reservar con ${name}</button>
             <form class="barber-booking-form" hidden>
               <input type="hidden" name="barber" value="${name}">
+              ${barberBookingFieldsHtml(person.name || '')}
               <button type="submit" class="btn btn-whatsapp btn-full">Enviar reserva por WhatsApp</button>
             </form>
           </div>

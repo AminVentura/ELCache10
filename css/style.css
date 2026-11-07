@@ -4598,3 +4598,77 @@ body.watch-page {
 .map-consent-text { font-family: var(--font-display); font-size: 1.2rem; color: var(--color-gold-light); margin: 0; }
 .map-consent-note { font-size: 0.9rem; color: #cbd5e1; margin: 0; max-width: 32rem; }
 .map-consent-btn { min-height: 44px; }
+
+/* ── Formularios olas 2–5 (2026-11-04): etiqueta flotante, campo de 56 px, letra 16, radio 16, botón fijo ──
+   Plantilla de la ola 0 (Obsidian FORMULARIOS-2026-10-25/plantilla-ola0) con los colores del sitio. */
+.cf { position: relative; }
+.booking-form .cf .cf__input,
+.barber-booking .cf .cf__input {
+  display: block;
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 22px 16px 6px;
+  border: 1.5px solid #8794a6;
+  border-radius: 16px;
+  background: #fff;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.25;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.booking-form .cf textarea.cf__input,
+.barber-booking .cf textarea.cf__input { height: auto; min-height: 96px; padding-top: 26px; resize: vertical; }
+.booking-form .cf select.cf__input,
+.barber-booking .cf select.cf__input {
+  padding-right: 40px;
+  background-image: linear-gradient(45deg, transparent 50%, #475569 50%), linear-gradient(135deg, #475569 50%, transparent 50%);
+  background-position: calc(100% - 22px) 26px, calc(100% - 16px) 26px;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+.booking-form .cf .cf__label,
+.barber-booking .cf .cf__label {
+  position: absolute;
+  left: 17px;
+  top: 17px;
+  margin: 0;
+  max-width: calc(100% - 34px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: #475569;
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.cf .cf__input:focus + .cf__label,
+.cf .cf__input:not(:placeholder-shown) + .cf__label,
+.cf .cf__input:-webkit-autofill + .cf__label,
+.cf.cf--fija .cf__label { transform: translateY(-10px) scale(0.8); }
+.cf .cf__input:focus { outline: none; border-color: #8a6d12; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.4); }
+.cf .cf__input:focus + .cf__label { color: #6b5410; }
+.cf .cf__ayuda { display: block; margin: 6px 4px 0; font-size: 14px; color: #475569; }
+.booking-form .booking-field.cf,
+.barber-booking .booking-field.cf { margin-bottom: 16px; }
+.booking-form .btn, .barber-booking-form .btn { min-height: 56px; border-radius: 16px; font-size: 17px; }
+.booking-privacy-note { margin: 4px 0 10px; font-size: 14px; line-height: 1.45; color: #475569; }
+.booking-privacy-note a { color: #6b5410; text-decoration: underline; }
+/* Botón principal fijo abajo mientras el formulario no cabe en la pantalla (va en el flujo: no tapa campos). */
+.booking-form .pie-fijo {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: 8px calc(-1 * var(--pf-sangria, 2rem)) 0;
+  padding: 12px var(--pf-sangria, 2rem) calc(12px + env(safe-area-inset-bottom, 0px));
+  background: #fff;
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.12);
+  border-radius: 0 0 16px 16px;
+}
+@media (prefers-reduced-motion: reduce) { .cf .cf__label { transition: none; } }
