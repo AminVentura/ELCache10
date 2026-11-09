@@ -6,6 +6,7 @@ import {
   buildBarberOfferCaption,
   formatPriceFromCents,
   getActiveOffers,
+  injectGuidePrices,
   injectPublicFaqPrices,
   injectPublicOffersHtml,
   injectPublicServicesHtml,
@@ -317,4 +318,21 @@ test('portada: los precios de index.html salen de data/servicios.json', async ()
   const viejo = html.replace(/<span class="spl-price">\$40<\/span>/, '<span class="spl-price">$35</span>');
   assert.notEqual(aplicarPreciosPortada(viejo, servicios), viejo, 'un precio escrito a mano se corrige al publicar');
   assert.match(readFileSync(new URL('../scripts/build-static.mjs', import.meta.url), 'utf8'), /aplicarPreciosPortada/);
+});
+
+test('injectGuidePrices reescribe los precios de las guías desde servicios.json', () => {
+  const services = {
+    version: 1,
+    updated_at: '2026-11-08T00:00:00.000Z',
+    servicios: [
+      { id: 'barber-kids-cut', categoria: 'Barber Services', nombre: 'Kids Cut', precio_centavos: 2500, disponible: true, orden: 1 },
+      { id: 'barber-fade', categoria: 'Barber Services', nombre: 'Fade', precio_centavos: 4000, disponible: false, orden: 2 },
+    ],
+  };
+  const html = '<p>Kids Cut <span data-precio="barber-kids-cut">$18</span>; fade <span data-precio="barber-fade">$40</span>; otro <span data-precio="no-existe">$9</span>.</p>';
+  const out = injectGuidePrices(html, services);
+  assert.match(out, /data-precio="barber-kids-cut">\$25</);
+  assert.match(out, /data-precio="barber-fade">\$40</); // no disponible: se deja como estaba
+  assert.match(out, /data-precio="no-existe">\$9</);
+  assert.equal(injectGuidePrices(html, { servicios: 'roto' }), html);
 });
