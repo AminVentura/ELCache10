@@ -50,5 +50,18 @@ for (const destino of [path.join(root, 'index.html'), path.join(output, 'index.h
 }
 console.log('✅ Precios de la portada tomados de data/servicios.json.');
 
+// Guías (2026-11-08): los precios que cita cada guía van en <span data-precio="id"> y salen del mismo archivo.
+const { injectGuidePrices } = await import('../lib/static-data.mjs');
+for (const carpeta of [path.join(root, 'guias'), path.join(output, 'guias')]) {
+  if (!existsSync(carpeta)) continue;
+  for (const nombre of readdirSync(carpeta).filter((f) => f.endsWith('.html'))) {
+    const destino = path.join(carpeta, nombre);
+    const antes = readFileSync(destino, 'utf8');
+    const despues = injectGuidePrices(antes, servicios);
+    if (despues !== antes) writeFileSync(destino, despues);
+  }
+}
+console.log('✅ Precios de las guías tomados de data/servicios.json.');
+
 const generated = readdirSync(output).sort();
 console.log(`✅ public/ generado con ${generated.length} entradas estáticas.`);

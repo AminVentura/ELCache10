@@ -48,7 +48,7 @@ function scanHtmlFiles(dir, baseDir) {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory() && !['node_modules', '.git', '.next', 'images', 'videos', 'css', 'js', 'assets', 'admin', 'api', 'app', 'data', 'lib', 'tests', 'scripts', 'public'].includes(entry.name)) {
+    if (entry.isDirectory() && !['node_modules', '.git', '.next', 'images', 'videos', 'css', 'js', 'assets', 'admin', 'api', 'app', 'data', 'lib', 'tests', 'scripts', 'public', '_ARCHIVO'].includes(entry.name)) {
       results.push(...scanHtmlFiles(fullPath, baseDir));
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
       const rel = path.relative(baseDir, fullPath).replace(/\\/g, '/');
@@ -64,7 +64,7 @@ function scanHtmlFiles(dir, baseDir) {
 
 function locFor(rel) {
   if (rel === 'index.html') return `${BASE_URL}/`;
-  if (rel === 'guias/index.html') return `${BASE_URL}/guias`; // /guias/ redirige (308) a /guias
+  if (rel === 'guias/index.html') return `${BASE_URL}/guias/`; // Firebase sirve /guias/ (200); /guias redirige 301
   return `${BASE_URL}/${rel}`;
 }
 

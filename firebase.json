@@ -11,6 +11,21 @@
       ],
       "redirects": [
         {
+          "source": "/guias/fade-caesar-hot-towel.html",
+          "destination": "/guias/cortes-y-fades.html",
+          "type": 301
+        },
+        {
+          "source": "/guias/glosario-barbero.html",
+          "destination": "/guias/cortes-y-fades.html",
+          "type": 301
+        },
+        {
+          "source": "/guias/barberia-dominicana.html",
+          "destination": "/guias/corte-dominicano-paso-a-paso.html",
+          "type": 301
+        },
+        {
           "source": "/admin",
           "destination": "https://admin.elcache10.com/admin",
           "type": 302
